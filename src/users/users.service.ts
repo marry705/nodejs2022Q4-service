@@ -1,5 +1,5 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { Store } from 'src/Store/store';
+import { Store } from 'src/store/store';
 import { v4, validate } from 'uuid';
 import { CreateUserDto, UpdateUserDto, User } from './users.entitie';
 

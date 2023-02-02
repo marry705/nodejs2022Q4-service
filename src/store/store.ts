@@ -1,5 +1,5 @@
 import { IAlbum } from 'src/albums/types';
-import { IArtist } from 'src/artists/types';
+import { Artist } from 'src/artists/artists.entitie';
 import { IFavorite } from 'src/favorites/types';
 import { ITrack } from 'src/tracks/types';
 import { User } from 'src/users/users.entitie';
@@ -9,7 +9,7 @@ export class Store {
 
   users: User[];
   private tracks: ITrack[];
-  private artists: IArtist[];
+  artists: Artist[];
   private albums: IAlbum[];
   private favorites: IFavorite;
 

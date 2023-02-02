@@ -2,12 +2,12 @@ import { IAlbum } from 'src/albums/types';
 import { IArtist } from 'src/artists/types';
 import { IFavorite } from 'src/favorites/types';
 import { ITrack } from 'src/tracks/types';
-import { IUser } from 'src/users/types';
+import { User } from 'src/users/users.entitie';
 
 export class Store {
   private static instance: Store;
 
-  private users: IUser[];
+  users: User[];
   private tracks: ITrack[];
   private artists: IArtist[];
   private albums: IAlbum[];

@@ -6,7 +6,7 @@ import { Artist, UpdateArtistDto } from './artists.entitie';
 @Injectable()
 export class ArtistsService {
   public getAll(): Artist[] {
-    return Store.getInstance().artists.map((artist) => new Artist(artist));
+    return Store.getInstance().artists;
   }
 
   public getById(id: string): Artist {

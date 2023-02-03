@@ -36,13 +36,13 @@ export class TracksController {
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
-  create(@Body() createArtistDto: UpdateTrackDto): Track {
-    return this.trackServise.create(createArtistDto);
+  create(@Body() createTrackDto: UpdateTrackDto): Track {
+    return this.trackServise.create(createTrackDto);
   }
 
   @Put(':id')
   @HttpCode(HttpStatus.OK)
-  update(@Param() id: string, @Body() updateArtistData: UpdateTrackDto): Track {
-    return this.trackServise.update(id, updateArtistData);
+  update(@Param() id: string, @Body() updateTrackData: UpdateTrackDto): Track {
+    return this.trackServise.update(id, updateTrackData);
   }
 }

@@ -1,4 +1,4 @@
-import { IAlbum } from 'src/albums/types';
+import { Album } from 'src/albums/albums.entitie';
 import { Artist } from 'src/artists/artists.entitie';
 import { IFavorite } from 'src/favorites/types';
 import { Track } from 'src/tracks/tracks.entitie';
@@ -10,7 +10,7 @@ export class Store {
   users: User[];
   tracks: Track[];
   artists: Artist[];
-  private albums: IAlbum[];
+  albums: Album[];
   private favorites: IFavorite;
 
   private constructor() {

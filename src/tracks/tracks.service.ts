@@ -6,7 +6,7 @@ import { Track, UpdateTrackDto } from './tracks.entitie';
 @Injectable()
 export class TracksService {
   public getAll(): Track[] {
-    return Store.getInstance().tracks.map((track) => new Track(track));
+    return Store.getInstance().tracks;
   }
 
   public getById(id: string): Track {

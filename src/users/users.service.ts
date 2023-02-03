@@ -6,7 +6,7 @@ import { CreateUserDto, UpdateUserDto, User } from './users.entitie';
 @Injectable()
 export class UsersService {
   public getAll(): User[] {
-    return Store.getInstance().users.map((user) => new User(user));
+    return Store.getInstance().users;
   }
 
   public getById(id: string): User {

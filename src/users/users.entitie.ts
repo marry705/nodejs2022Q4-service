@@ -1,21 +1,29 @@
 import { Exclude } from 'class-transformer';
+import { IsString, IsUUID } from 'class-validator';
 
 export class CreateUserDto {
+  @IsString()
   login: string;
+  @IsString()
   password: string;
 }
 
 export class UpdateUserDto {
+  @IsString()
   oldPassword: string;
+  @IsString()
   newPassword: string;
 }
 
 export class User {
+  @IsUUID()
   id: string;
+
   login: string;
   version: number;
   createdAt: number;
   updatedAt: number;
+
   @Exclude()
   password: string;
 

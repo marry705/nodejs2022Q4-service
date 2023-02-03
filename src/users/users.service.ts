@@ -24,10 +24,6 @@ export class UsersService {
   }
 
   public create({ login, password }: CreateUserDto): User {
-    if (typeof login != 'string' || typeof password != 'string') {
-      throw new HttpException('BAD_REQUEST', HttpStatus.BAD_REQUEST);
-    }
-
     const newUser = new User({
       login,
       password,
@@ -44,10 +40,6 @@ export class UsersService {
 
   public update(id: string, { oldPassword, newPassword }: UpdateUserDto): User {
     if (!validate(id)) {
-      throw new HttpException('BAD_REQUEST', HttpStatus.BAD_REQUEST);
-    }
-
-    if (typeof oldPassword != 'string' && typeof newPassword != 'string') {
       throw new HttpException('BAD_REQUEST', HttpStatus.BAD_REQUEST);
     }
 

@@ -9,6 +9,8 @@ import {
   HttpCode,
   HttpStatus,
   Header,
+  ClassSerializerInterceptor,
+  UseInterceptors,
 } from '@nestjs/common';
 import { CreateUserDto, UpdateUserDto, User } from './users.entitie';
 import { UsersService } from './users.service';
@@ -17,11 +19,13 @@ import { UsersService } from './users.service';
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
+  @UseInterceptors(ClassSerializerInterceptor)
   @Get()
   getAll(): User[] {
     return this.usersService.getAll();
   }
 
+  @UseInterceptors(ClassSerializerInterceptor)
   @Get(':id')
   getOne(@Param('id') id: string): User {
     return this.usersService.getById(id);
@@ -33,6 +37,7 @@ export class UsersController {
     return this.usersService.delete(id);
   }
 
+  @UseInterceptors(ClassSerializerInterceptor)
   @Post()
   @HttpCode(HttpStatus.CREATED)
   @Header('Cache-Control', 'none')
@@ -40,6 +45,7 @@ export class UsersController {
     return this.usersService.create(createUserDto);
   }
 
+  @UseInterceptors(ClassSerializerInterceptor)
   @Put(':id')
   update(@Param() id: string, @Body() updateUserData: UpdateUserDto): User {
     return this.usersService.update(id, updateUserData);

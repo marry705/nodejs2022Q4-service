@@ -1,6 +1,6 @@
 import { Album } from 'src/albums/albums.entitie';
 import { Artist } from 'src/artists/artists.entitie';
-import { IFavorite } from 'src/favorites/types';
+import { Favorite } from 'src/favorites/favorites.entitie';
 import { Track } from 'src/tracks/tracks.entitie';
 import { User } from 'src/users/users.entitie';
 
@@ -11,7 +11,7 @@ export class Store {
   tracks: Track[];
   artists: Artist[];
   albums: Album[];
-  private favorites: IFavorite;
+  favorites: Favorite;
 
   private constructor() {
     this.users = [];

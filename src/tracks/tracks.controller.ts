@@ -8,6 +8,7 @@ import {
   Delete,
   HttpCode,
   HttpStatus,
+  Header,
 } from '@nestjs/common';
 import { Track, UpdateTrackDto } from './tracks.entitie';
 import { TracksService } from './tracks.service';
@@ -36,12 +37,14 @@ export class TracksController {
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
+  @Header('Accept', 'application/json')
   create(@Body() createTrackDto: UpdateTrackDto): Track {
     return this.trackServise.create(createTrackDto);
   }
 
   @Put(':id')
   @HttpCode(HttpStatus.OK)
+  @Header('Accept', 'application/json')
   update(@Param() id: string, @Body() updateTrackData: UpdateTrackDto): Track {
     return this.trackServise.update(id, updateTrackData);
   }

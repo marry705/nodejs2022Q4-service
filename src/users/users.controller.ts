@@ -10,6 +10,7 @@ import {
   HttpStatus,
   ClassSerializerInterceptor,
   UseInterceptors,
+  Header,
 } from '@nestjs/common';
 import { CreateUserDto, UpdateUserDto, User } from './users.entitie';
 import { UsersService } from './users.service';
@@ -41,6 +42,7 @@ export class UsersController {
   @UseInterceptors(ClassSerializerInterceptor)
   @Post()
   @HttpCode(HttpStatus.CREATED)
+  @Header('Accept', 'application/json')
   create(@Body() createUserDto: CreateUserDto): User {
     return this.usersService.create(createUserDto);
   }
@@ -48,6 +50,7 @@ export class UsersController {
   @UseInterceptors(ClassSerializerInterceptor)
   @Put(':id')
   @HttpCode(HttpStatus.OK)
+  @Header('Accept', 'application/json')
   update(@Param() id: string, @Body() updateUserData: UpdateUserDto): User {
     return this.usersService.update(id, updateUserData);
   }

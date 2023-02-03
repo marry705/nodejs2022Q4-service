@@ -8,6 +8,7 @@ import {
   Delete,
   HttpCode,
   HttpStatus,
+  Header,
 } from '@nestjs/common';
 import { AlbumsService } from './albums.service';
 import { Album, UpdateAlbumDto } from './albums.entitie';
@@ -36,12 +37,14 @@ export class AlbumsController {
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
+  @Header('Accept', 'application/json')
   create(@Body() createAlbumDto: UpdateAlbumDto): Album {
     return this.albumServise.create(createAlbumDto);
   }
 
   @Put(':id')
   @HttpCode(HttpStatus.OK)
+  @Header('Accept', 'application/json')
   update(@Param() id: string, @Body() updateAlbumData: UpdateAlbumDto): Album {
     return this.albumServise.update(id, updateAlbumData);
   }

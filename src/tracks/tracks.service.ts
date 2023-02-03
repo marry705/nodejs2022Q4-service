@@ -24,12 +24,6 @@ export class TracksService {
   }
 
   public create(createTrackData: UpdateTrackDto): Track {
-    const { name, duration } = createTrackData;
-
-    if (typeof name != 'string' || typeof duration != 'number') {
-      throw new HttpException('BAD_REQUEST', HttpStatus.BAD_REQUEST);
-    }
-
     const newTrack = new Track({
       ...createTrackData,
       id: v4(),
@@ -42,12 +36,6 @@ export class TracksService {
 
   public update(id: string, updateTrackData: UpdateTrackDto): Track {
     if (!validate(id)) {
-      throw new HttpException('BAD_REQUEST', HttpStatus.BAD_REQUEST);
-    }
-
-    const { name, duration } = updateTrackData;
-
-    if (typeof name != 'string' || typeof duration != 'number') {
       throw new HttpException('BAD_REQUEST', HttpStatus.BAD_REQUEST);
     }
 

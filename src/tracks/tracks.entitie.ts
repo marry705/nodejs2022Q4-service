@@ -1,9 +1,20 @@
-import { IsOptional } from 'class-validator';
+import { IsNumber, IsOptional, IsString, IsUUID } from 'class-validator';
 
-export type UpdateTrackDto = Partial<Pick<Track, 'artistId' | 'albumId'>> &
-  Pick<Track, 'name' | 'duration'>;
+export class UpdateTrackDto {
+  @IsString()
+  name: string;
+  @IsNumber()
+  duration: number;
+  @IsOptional()
+  @IsString()
+  artistId: string;
+  @IsOptional()
+  @IsString()
+  albumId: string;
+}
 
 export class Track {
+  @IsUUID()
   id: string;
   name: string;
   duration: number;

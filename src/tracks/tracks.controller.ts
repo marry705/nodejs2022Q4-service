@@ -8,7 +8,6 @@ import {
   Delete,
   HttpCode,
   HttpStatus,
-  Header,
 } from '@nestjs/common';
 import { Track, UpdateTrackDto } from './tracks.entitie';
 import { TracksService } from './tracks.service';
@@ -18,11 +17,13 @@ export class TracksController {
   constructor(private readonly trackServise: TracksService) {}
 
   @Get()
+  @HttpCode(HttpStatus.OK)
   getAll(): Track[] {
     return this.trackServise.getAll();
   }
 
   @Get(':id')
+  @HttpCode(HttpStatus.OK)
   getOne(@Param('id') id: string): Track {
     return this.trackServise.getById(id);
   }
@@ -40,6 +41,7 @@ export class TracksController {
   }
 
   @Put(':id')
+  @HttpCode(HttpStatus.OK)
   update(@Param() id: string, @Body() updateArtistData: UpdateTrackDto): Track {
     return this.trackServise.update(id, updateArtistData);
   }

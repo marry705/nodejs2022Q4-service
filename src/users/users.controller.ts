@@ -8,7 +8,6 @@ import {
   Delete,
   HttpCode,
   HttpStatus,
-  Header,
   ClassSerializerInterceptor,
   UseInterceptors,
 } from '@nestjs/common';
@@ -21,12 +20,14 @@ export class UsersController {
 
   @UseInterceptors(ClassSerializerInterceptor)
   @Get()
+  @HttpCode(HttpStatus.OK)
   getAll(): User[] {
     return this.usersService.getAll();
   }
 
   @UseInterceptors(ClassSerializerInterceptor)
   @Get(':id')
+  @HttpCode(HttpStatus.OK)
   getOne(@Param('id') id: string): User {
     return this.usersService.getById(id);
   }
@@ -46,6 +47,7 @@ export class UsersController {
 
   @UseInterceptors(ClassSerializerInterceptor)
   @Put(':id')
+  @HttpCode(HttpStatus.OK)
   update(@Param() id: string, @Body() updateUserData: UpdateUserDto): User {
     return this.usersService.update(id, updateUserData);
   }

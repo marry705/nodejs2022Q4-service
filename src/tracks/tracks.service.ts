@@ -45,7 +45,15 @@ export class TracksService {
       throw new HttpException('NOT_FOUND', HttpStatus.NOT_FOUND);
     }
 
-    track.update(updateTrackData);
+    const trackIndex = Store.getInstance().tracks.findIndex(
+      (track) => track.id == id,
+    );
+
+    Store.getInstance().tracks.splice(
+      trackIndex,
+      1,
+      new Track(updateTrackData),
+    );
 
     return track;
   }

@@ -22,6 +22,7 @@ export class UsersController {
   @UseInterceptors(ClassSerializerInterceptor)
   @Get()
   @HttpCode(HttpStatus.OK)
+  @Header('Accept', 'application/json')
   getAll(): User[] {
     return this.usersService.getAll();
   }
@@ -29,12 +30,14 @@ export class UsersController {
   @UseInterceptors(ClassSerializerInterceptor)
   @Get(':id')
   @HttpCode(HttpStatus.OK)
+  @Header('Accept', 'application/json')
   getOne(@Param('id') id: string): User {
     return this.usersService.getById(id);
   }
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
+  @Header('Accept', 'application/json')
   delete(@Param('id') id: string) {
     return this.usersService.delete(id);
   }

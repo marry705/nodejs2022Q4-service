@@ -19,18 +19,21 @@ export class TracksController {
 
   @Get()
   @HttpCode(HttpStatus.OK)
+  @Header('Accept', 'application/json')
   getAll(): Track[] {
     return this.trackServise.getAll();
   }
 
   @Get(':id')
   @HttpCode(HttpStatus.OK)
+  @Header('Accept', 'application/json')
   getOne(@Param('id') id: string): Track {
     return this.trackServise.getById(id);
   }
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
+  @Header('Accept', 'application/json')
   delete(@Param('id') id: string) {
     return this.trackServise.delete(id);
   }

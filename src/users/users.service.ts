@@ -43,7 +43,7 @@ export class UsersService {
       throw new HttpException('BAD_REQUEST', HttpStatus.BAD_REQUEST);
     }
 
-    const user = Store.getInstance().users.find((user) => user.id == id);
+    const user = Store.getInstance().users.find((user) => user.id === id);
 
     if (!user) {
       throw new HttpException('NOT_FOUND', HttpStatus.NOT_FOUND);
@@ -53,12 +53,20 @@ export class UsersService {
       throw new HttpException('FORBIDDEN', HttpStatus.FORBIDDEN);
     }
 
-    user.update({ oldPassword, newPassword });
+    user.password = newPassword;
+    user.version += 1;
+    user.updatedAt = Date.now();
+
+    const userIndex = Store.getInstance().users.findIndex(
+      (user) => user.id == id,
+    );
+
+    Store.getInstance().users.splice(userIndex, 1, user);
 
     return user;
   }
 
-  public delete(id: string) {
+  public delete(id: string): HttpException {
     if (!validate(id)) {
       throw new HttpException('BAD_REQUEST', HttpStatus.BAD_REQUEST);
     }

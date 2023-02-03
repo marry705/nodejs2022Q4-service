@@ -35,7 +35,6 @@ export class TracksController {
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
-  @Header('Accept', 'application/json')
   create(@Body() createArtistDto: UpdateTrackDto): Track {
     return this.trackServise.create(createArtistDto);
   }

@@ -26,10 +26,6 @@ export class ArtistsService {
   }
 
   public create({ name, grammy }: UpdateArtistDto): Artist {
-    if (typeof name != 'string' || typeof grammy != 'boolean') {
-      throw new HttpException('BAD_REQUEST', HttpStatus.BAD_REQUEST);
-    }
-
     const newArtist = new Artist({
       name,
       grammy,
@@ -43,10 +39,6 @@ export class ArtistsService {
 
   public update(id: string, { name, grammy }: UpdateArtistDto): Artist {
     if (!validate(id)) {
-      throw new HttpException('BAD_REQUEST', HttpStatus.BAD_REQUEST);
-    }
-
-    if (typeof name != 'string' || typeof grammy != 'boolean') {
       throw new HttpException('BAD_REQUEST', HttpStatus.BAD_REQUEST);
     }
 

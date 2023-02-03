@@ -40,7 +40,6 @@ export class UsersController {
   @UseInterceptors(ClassSerializerInterceptor)
   @Post()
   @HttpCode(HttpStatus.CREATED)
-  @Header('Cache-Control', 'none')
   create(@Body() createUserDto: CreateUserDto): User {
     return this.usersService.create(createUserDto);
   }

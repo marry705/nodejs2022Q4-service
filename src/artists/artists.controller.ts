@@ -35,7 +35,6 @@ export class ArtistsController {
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
-  @Header('Cache-Control', 'none')
   create(@Body() createArtistDto: UpdateArtistDto): Artist {
     return this.artistsServise.create(createArtistDto);
   }

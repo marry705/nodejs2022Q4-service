@@ -15,29 +15,29 @@ import { ArtistsService } from './artists.service';
 
 @Controller('artist')
 export class ArtistsController {
-  constructor(private readonly artistServise: ArtistsService) {}
+  constructor(private readonly artistsServise: ArtistsService) {}
 
   @Get()
   getAll(): Artist[] {
-    return this.artistServise.getAll();
+    return this.artistsServise.getAll();
   }
 
   @Get(':id')
   getOne(@Param('id') id: string): Artist {
-    return this.artistServise.getById(id);
+    return this.artistsServise.getById(id);
   }
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
   delete(@Param('id') id: string) {
-    return this.artistServise.delete(id);
+    return this.artistsServise.delete(id);
   }
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
   @Header('Cache-Control', 'none')
   create(@Body() createArtistDto: UpdateArtistDto): Artist {
-    return this.artistServise.create(createArtistDto);
+    return this.artistsServise.create(createArtistDto);
   }
 
   @Put(':id')
@@ -45,6 +45,6 @@ export class ArtistsController {
     @Param() id: string,
     @Body() updateArtistData: UpdateArtistDto,
   ): Artist {
-    return this.artistServise.update(id, updateArtistData);
+    return this.artistsServise.update(id, updateArtistData);
   }
 }

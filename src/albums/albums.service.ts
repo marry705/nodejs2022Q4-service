@@ -39,15 +39,13 @@ export class AlbumsService {
       throw new HttpException('BAD_REQUEST', HttpStatus.BAD_REQUEST);
     }
 
-    const album = Store.getInstance().albums.find((album) => album.id == id);
-
-    if (!album) {
-      throw new HttpException('NOT_FOUND', HttpStatus.NOT_FOUND);
-    }
-
     const albumIndex = Store.getInstance().albums.findIndex(
       (album) => album.id == id,
     );
+
+    if (albumIndex === -1) {
+      throw new HttpException('NOT_FOUND', HttpStatus.NOT_FOUND);
+    }
 
     Store.getInstance().albums.splice(
       albumIndex,
@@ -55,7 +53,7 @@ export class AlbumsService {
       new Album(updateAlbumData),
     );
 
-    return album;
+    return this.getById(id);
   }
 
   public delete(id: string): HttpException {

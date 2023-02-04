@@ -37,25 +37,29 @@ export class ArtistsService {
     return newArtist;
   }
 
-  public update(id: string, { name, grammy }: UpdateArtistDto): Artist {
+  public update(id: string, updateArtistData: UpdateArtistDto): Artist {
     if (!validate(id)) {
       throw new HttpException('BAD_REQUEST', HttpStatus.BAD_REQUEST);
     }
 
-    const artist = Store.getInstance().artists.find(
+    const artistIndex = Store.getInstance().artists.findIndex(
       (artist) => artist.id == id,
     );
 
-    if (!artist) {
+    if (artistIndex === -1) {
       throw new HttpException('NOT_FOUND', HttpStatus.NOT_FOUND);
     }
 
-    artist.update({ name, grammy });
+    Store.getInstance().artists.splice(
+      artistIndex,
+      1,
+      new Artist(updateArtistData),
+    );
 
-    return artist;
+    return this.getById(id);
   }
 
-  public delete(id: string) {
+  public delete(id: string): HttpException {
     if (!validate(id)) {
       throw new HttpException('BAD_REQUEST', HttpStatus.BAD_REQUEST);
     }

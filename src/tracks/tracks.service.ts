@@ -58,7 +58,7 @@ export class TracksService {
     return track;
   }
 
-  public delete(id: string) {
+  public delete(id: string): HttpException {
     if (!validate(id)) {
       throw new HttpException('BAD_REQUEST', HttpStatus.BAD_REQUEST);
     }

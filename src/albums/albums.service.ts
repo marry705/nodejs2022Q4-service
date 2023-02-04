@@ -45,12 +45,20 @@ export class AlbumsService {
       throw new HttpException('NOT_FOUND', HttpStatus.NOT_FOUND);
     }
 
-    album.update(updateAlbumData);
+    const albumIndex = Store.getInstance().albums.findIndex(
+      (album) => album.id == id,
+    );
+
+    Store.getInstance().albums.splice(
+      albumIndex,
+      1,
+      new Album(updateAlbumData),
+    );
 
     return album;
   }
 
-  public delete(id: string) {
+  public delete(id: string): HttpException {
     if (!validate(id)) {
       throw new HttpException('BAD_REQUEST', HttpStatus.BAD_REQUEST);
     }

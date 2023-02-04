@@ -1,3 +1,4 @@
+import { ApiProperty } from '@nestjs/swagger';
 import { IsNumber, IsOptional, IsString, IsUUID } from 'class-validator';
 
 export class UpdateAlbumDto {
@@ -11,6 +12,7 @@ export class UpdateAlbumDto {
 }
 
 export class Album {
+  @ApiProperty()
   @IsUUID()
   id: string;
   name: string;
@@ -22,10 +24,4 @@ export class Album {
   constructor(partial: Partial<Album>) {
     Object.assign(this, partial);
   }
-
-  public update = ({ name, year, artistId }: UpdateAlbumDto): void => {
-    this.name = name;
-    this.year = year;
-    this.artistId = artistId;
-  };
 }

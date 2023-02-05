@@ -18,11 +18,7 @@ export class Store {
     this.tracks = [];
     this.artists = [];
     this.albums = [];
-    this.favorites = {
-      tracks: this.tracks,
-      artists: this.artists,
-      albums: this.albums,
-    };
+    this.favorites = new Favorite();
   }
 
   public static getInstance(): Store {

@@ -1,4 +1,5 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { removeFromFavoritesByKey } from 'src/favorites/helper';
 import { Store } from 'src/store/store';
 import { v4 } from 'uuid';
 import { Track, UpdateTrackDto } from './tracks.entitie';
@@ -56,6 +57,8 @@ export class TracksService {
     if (trackIndex === -1) {
       throw new HttpException('NOT_FOUND', HttpStatus.NOT_FOUND);
     }
+
+    removeFromFavoritesByKey(id, 'tracks');
 
     Store.getInstance().tracks.splice(trackIndex, 1);
   }

@@ -1,4 +1,5 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { removeFromFavoritesByKey } from 'src/favorites/helper';
 import { Store } from 'src/store/store';
 import { Track } from 'src/tracks/tracks.entitie';
 import { v4 } from 'uuid';
@@ -69,6 +70,8 @@ export class AlbumsService {
 
       Store.getInstance().tracks.splice(trackIndex, 1, new Track({ ...track }));
     }
+
+    removeFromFavoritesByKey(id, 'albums');
 
     Store.getInstance().albums.splice(albumIndex, 1);
   }

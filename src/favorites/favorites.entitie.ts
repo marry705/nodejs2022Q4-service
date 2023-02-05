@@ -7,7 +7,9 @@ export class Favorite {
   albums: Album[];
   tracks: Track[];
 
-  constructor(partial: Partial<Favorite>) {
-    Object.assign(this, partial);
+  constructor() {
+    this.tracks = [];
+    this.artists = [];
+    this.albums = [];
   }
 }

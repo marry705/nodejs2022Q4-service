@@ -1,6 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { Store } from 'src/store/store';
-import { v4, validate } from 'uuid';
+import { Track } from 'src/tracks/tracks.entitie';
+import { v4 } from 'uuid';
 import { Artist, UpdateArtistDto } from './artists.entitie';
 
 @Injectable()
@@ -10,10 +11,6 @@ export class ArtistsService {
   }
 
   public getById(id: string): Artist {
-    if (!validate(id)) {
-      throw new HttpException('BAD_REQUEST', HttpStatus.BAD_REQUEST);
-    }
-
     const artist = Store.getInstance().artists.find(
       (artist) => artist.id === id,
     );
@@ -38,42 +35,48 @@ export class ArtistsService {
   }
 
   public update(id: string, updateArtistData: UpdateArtistDto): Artist {
-    if (!validate(id)) {
-      throw new HttpException('BAD_REQUEST', HttpStatus.BAD_REQUEST);
-    }
-
-    const artistIndex = Store.getInstance().artists.findIndex(
+    const artist = Store.getInstance().artists.find(
       (artist) => artist.id == id,
     );
 
-    if (artistIndex === -1) {
+    if (!artist) {
       throw new HttpException('NOT_FOUND', HttpStatus.NOT_FOUND);
     }
 
-    Store.getInstance().artists.splice(
-      artistIndex,
-      1,
-      new Artist(updateArtistData),
+    const artistIndex = Store.getInstance().artists.findIndex(
+      (track) => track.id == id,
     );
 
-    return this.getById(id);
+    const updateArtist = new Artist({ id, ...updateArtistData });
+
+    Store.getInstance().artists.splice(artistIndex, 1, updateArtist);
+
+    return updateArtist;
   }
 
-  public delete(id: string): HttpException {
-    if (!validate(id)) {
-      throw new HttpException('BAD_REQUEST', HttpStatus.BAD_REQUEST);
-    }
-
+  public delete(id: string): void {
     const artistIndex = Store.getInstance().artists.findIndex(
       (artist) => artist.id == id,
     );
 
     if (artistIndex === -1) {
       throw new HttpException('NOT_FOUND', HttpStatus.NOT_FOUND);
+    }
+
+    const tacks = Store.getInstance().tracks.filter(
+      (track) => track.artistId === id,
+    );
+
+    for (const track of tacks) {
+      track.artistId = null;
+
+      const trackIndex = Store.getInstance().tracks.findIndex(
+        (_track) => _track.id == track.id,
+      );
+
+      Store.getInstance().tracks.splice(trackIndex, 1, new Track({ ...track }));
     }
 
     Store.getInstance().artists.splice(artistIndex, 1);
-
-    return new HttpException('Deleted', HttpStatus.NO_CONTENT);
   }
 }

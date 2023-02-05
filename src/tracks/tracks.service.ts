@@ -1,6 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { Store } from 'src/store/store';
-import { v4, validate } from 'uuid';
+import { v4 } from 'uuid';
 import { Track, UpdateTrackDto } from './tracks.entitie';
 
 @Injectable()
@@ -10,10 +10,6 @@ export class TracksService {
   }
 
   public getById(id: string): Track {
-    if (!validate(id)) {
-      throw new HttpException('BAD_REQUEST', HttpStatus.BAD_REQUEST);
-    }
-
     const track = Store.getInstance().tracks.find((track) => track.id === id);
 
     if (!track) {
@@ -35,10 +31,6 @@ export class TracksService {
   }
 
   public update(id: string, updateTrackData: UpdateTrackDto): Track {
-    if (!validate(id)) {
-      throw new HttpException('BAD_REQUEST', HttpStatus.BAD_REQUEST);
-    }
-
     const track = Store.getInstance().tracks.find((track) => track.id == id);
 
     if (!track) {
@@ -58,11 +50,7 @@ export class TracksService {
     return track;
   }
 
-  public delete(id: string): HttpException {
-    if (!validate(id)) {
-      throw new HttpException('BAD_REQUEST', HttpStatus.BAD_REQUEST);
-    }
-
+  public delete(id: string): void {
     const trackIndex = Store.getInstance().tracks.findIndex(
       (track) => track.id == id,
     );
@@ -72,7 +60,5 @@ export class TracksService {
     }
 
     Store.getInstance().tracks.splice(trackIndex, 1);
-
-    return new HttpException('Deleted', HttpStatus.NO_CONTENT);
   }
 }

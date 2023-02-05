@@ -2,21 +2,23 @@ import { Exclude } from 'class-transformer';
 import { IsNotEmpty, IsString, IsUUID } from 'class-validator';
 
 export class CreateUserDto {
-  @IsString()
   @IsNotEmpty()
-  login: string;
   @IsString()
+  readonly login: string;
+
   @IsNotEmpty()
-  password: string;
+  @IsString()
+  readonly password: string;
 }
 
 export class UpdateUserDto {
-  @IsString()
   @IsNotEmpty()
-  oldPassword: string;
   @IsString()
+  readonly oldPassword: string;
+
   @IsNotEmpty()
-  newPassword: string;
+  @IsString()
+  readonly newPassword: string;
 }
 
 export class User {

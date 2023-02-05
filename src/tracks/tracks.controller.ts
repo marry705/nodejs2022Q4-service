@@ -9,6 +9,7 @@ import {
   HttpCode,
   HttpStatus,
   Header,
+  ParseUUIDPipe,
 } from '@nestjs/common';
 import { Track, UpdateTrackDto } from './tracks.entitie';
 import { TracksService } from './tracks.service';
@@ -27,14 +28,14 @@ export class TracksController {
   @Get(':id')
   @HttpCode(HttpStatus.OK)
   @Header('Accept', 'application/json')
-  getOne(@Param('id') id: string): Track {
+  getOne(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string): Track {
     return this.trackServise.getById(id);
   }
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
   @Header('Accept', 'application/json')
-  delete(@Param('id') id: string) {
+  delete(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string) {
     return this.trackServise.delete(id);
   }
 
@@ -48,7 +49,10 @@ export class TracksController {
   @Put(':id')
   @HttpCode(HttpStatus.OK)
   @Header('Accept', 'application/json')
-  update(@Param() id: string, @Body() updateTrackData: UpdateTrackDto): Track {
+  update(
+    @Param('id', new ParseUUIDPipe({ version: '4' })) id: string,
+    @Body() updateTrackData: UpdateTrackDto,
+  ): Track {
     return this.trackServise.update(id, updateTrackData);
   }
 }

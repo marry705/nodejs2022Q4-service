@@ -1,6 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { Store } from 'src/store/store';
-import { v4, validate } from 'uuid';
+import { v4 } from 'uuid';
 import { CreateUserDto, UpdateUserDto, User } from './users.entitie';
 
 @Injectable()
@@ -10,10 +10,6 @@ export class UsersService {
   }
 
   public getById(id: string): User {
-    if (!validate(id)) {
-      throw new HttpException('BAD_REQUEST', HttpStatus.BAD_REQUEST);
-    }
-
     const user = Store.getInstance().users.find((user) => user.id === id);
 
     if (!user) {
@@ -38,22 +34,18 @@ export class UsersService {
     return newUser;
   }
 
-  public update(id: string, { oldPassword, newPassword }: UpdateUserDto): User {
-    if (!validate(id)) {
-      throw new HttpException('BAD_REQUEST', HttpStatus.BAD_REQUEST);
-    }
-
+  public update(id: string, updateUserData: UpdateUserDto): User {
     const user = Store.getInstance().users.find((user) => user.id === id);
 
     if (!user) {
       throw new HttpException('NOT_FOUND', HttpStatus.NOT_FOUND);
     }
 
-    if (user.password !== oldPassword) {
+    if (user.password !== updateUserData.oldPassword) {
       throw new HttpException('FORBIDDEN', HttpStatus.FORBIDDEN);
     }
 
-    user.password = newPassword;
+    user.password = updateUserData.newPassword;
     user.version += 1;
     user.updatedAt = Date.now();
 
@@ -66,11 +58,7 @@ export class UsersService {
     return user;
   }
 
-  public delete(id: string): HttpException {
-    if (!validate(id)) {
-      throw new HttpException('BAD_REQUEST', HttpStatus.BAD_REQUEST);
-    }
-
+  public delete(id: string): void {
     const userIndex = Store.getInstance().users.findIndex(
       (user) => user.id == id,
     );
@@ -80,7 +68,5 @@ export class UsersService {
     }
 
     Store.getInstance().users.splice(userIndex, 1);
-
-    return new HttpException('Deleted', HttpStatus.NO_CONTENT);
   }
 }

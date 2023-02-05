@@ -11,6 +11,7 @@ import {
   ClassSerializerInterceptor,
   UseInterceptors,
   Header,
+  ParseUUIDPipe,
 } from '@nestjs/common';
 import { CreateUserDto, UpdateUserDto, User } from './users.entitie';
 import { UsersService } from './users.service';
@@ -31,14 +32,14 @@ export class UsersController {
   @Get(':id')
   @HttpCode(HttpStatus.OK)
   @Header('Accept', 'application/json')
-  getOne(@Param('id') id: string): User {
+  getOne(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string): User {
     return this.usersService.getById(id);
   }
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
   @Header('Accept', 'application/json')
-  delete(@Param('id') id: string) {
+  delete(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string) {
     return this.usersService.delete(id);
   }
 
@@ -54,7 +55,10 @@ export class UsersController {
   @Put(':id')
   @HttpCode(HttpStatus.OK)
   @Header('Accept', 'application/json')
-  update(@Param('id') id: string, @Body() updateUserData: UpdateUserDto): User {
+  update(
+    @Param('id', new ParseUUIDPipe({ version: '4' })) id: string,
+    @Body() updateUserData: UpdateUserDto,
+  ): User {
     return this.usersService.update(id, updateUserData);
   }
 }

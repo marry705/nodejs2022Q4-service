@@ -22,7 +22,7 @@ import { UsersModule } from './users/users.module';
     {
       provide: APP_PIPE,
       useValue: new ValidationPipe({
-        transform: true,
+        transform: false,
         whitelist: true,
         forbidNonWhitelisted: true,
       }),

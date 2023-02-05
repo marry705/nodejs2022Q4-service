@@ -41,13 +41,11 @@ export class TracksService {
       (track) => track.id == id,
     );
 
-    Store.getInstance().tracks.splice(
-      trackIndex,
-      1,
-      new Track(updateTrackData),
-    );
+    const updateTrack = new Track({ id, ...updateTrackData });
 
-    return track;
+    Store.getInstance().tracks.splice(trackIndex, 1, updateTrack);
+
+    return updateTrack;
   }
 
   public delete(id: string): void {

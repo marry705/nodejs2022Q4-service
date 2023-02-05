@@ -1,6 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { Store } from 'src/store/store';
-import { v4, validate } from 'uuid';
+import { Track } from 'src/tracks/tracks.entitie';
+import { v4 } from 'uuid';
 import { Album, UpdateAlbumDto } from './albums.entitie';
 
 @Injectable()
@@ -10,10 +11,6 @@ export class AlbumsService {
   }
 
   public getById(id: string): Album {
-    if (!validate(id)) {
-      throw new HttpException('BAD_REQUEST', HttpStatus.BAD_REQUEST);
-    }
-
     const album = Store.getInstance().albums.find((album) => album.id === id);
 
     if (!album) {
@@ -35,10 +32,6 @@ export class AlbumsService {
   }
 
   public update(id: string, updateAlbumData: UpdateAlbumDto): Album {
-    if (!validate(id)) {
-      throw new HttpException('BAD_REQUEST', HttpStatus.BAD_REQUEST);
-    }
-
     const albumIndex = Store.getInstance().albums.findIndex(
       (album) => album.id == id,
     );
@@ -47,30 +40,36 @@ export class AlbumsService {
       throw new HttpException('NOT_FOUND', HttpStatus.NOT_FOUND);
     }
 
-    Store.getInstance().albums.splice(
-      albumIndex,
-      1,
-      new Album(updateAlbumData),
-    );
+    const updateAlbum = new Album({ id, ...updateAlbumData });
 
-    return this.getById(id);
+    Store.getInstance().albums.splice(albumIndex, 1, updateAlbum);
+
+    return updateAlbum;
   }
 
-  public delete(id: string): HttpException {
-    if (!validate(id)) {
-      throw new HttpException('BAD_REQUEST', HttpStatus.BAD_REQUEST);
-    }
-
+  public delete(id: string): void {
     const albumIndex = Store.getInstance().albums.findIndex(
       (album) => album.id == id,
     );
 
     if (albumIndex === -1) {
       throw new HttpException('NOT_FOUND', HttpStatus.NOT_FOUND);
+    }
+
+    const tacks = Store.getInstance().tracks.filter(
+      (track) => track.albumId === id,
+    );
+
+    for (const track of tacks) {
+      track.albumId = null;
+
+      const trackIndex = Store.getInstance().tracks.findIndex(
+        (_track) => _track.id == track.id,
+      );
+
+      Store.getInstance().tracks.splice(trackIndex, 1, new Track({ ...track }));
     }
 
     Store.getInstance().albums.splice(albumIndex, 1);
-
-    return new HttpException('Deleted', HttpStatus.NO_CONTENT);
   }
 }

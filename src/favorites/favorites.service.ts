@@ -79,7 +79,7 @@ export class FavoritesService {
     return new HttpException('Deleted', HttpStatus.NO_CONTENT);
   }
 
-  public deleteAlbom(id: string) {
+  public deleteAlbom(id: string): HttpException {
     if (!validate(id)) {
       throw new HttpException('BAD_REQUEST', HttpStatus.BAD_REQUEST);
     }

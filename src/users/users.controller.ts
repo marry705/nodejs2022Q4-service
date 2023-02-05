@@ -54,7 +54,7 @@ export class UsersController {
   @Put(':id')
   @HttpCode(HttpStatus.OK)
   @Header('Accept', 'application/json')
-  update(@Param() id: string, @Body() updateUserData: UpdateUserDto): User {
+  update(@Param('id') id: string, @Body() updateUserData: UpdateUserDto): User {
     return this.usersService.update(id, updateUserData);
   }
 }

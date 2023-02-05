@@ -12,4 +12,10 @@
 
 5. `npm run start`
 
-6. `npm run test`
+Application runs on the port (4000 by default). You can test it with Postman. 
+
+## TESTING 
+
+1. `npm run test`
+
+2. `npm run start`

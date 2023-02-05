@@ -1,27 +1,25 @@
 import { Exclude } from 'class-transformer';
-import { ApiProperty } from '@nestjs/swagger';
-import { IsString, IsUUID } from 'class-validator';
+import { IsNotEmpty, IsString, IsUUID } from 'class-validator';
 
 export class CreateUserDto {
   @IsString()
-  @ApiProperty({ default: 'Marry' })
+  @IsNotEmpty()
   login: string;
   @IsString()
-  @ApiProperty({ default: 'qwerty' })
+  @IsNotEmpty()
   password: string;
 }
 
 export class UpdateUserDto {
   @IsString()
-  @ApiProperty({ default: 'qwerty' })
+  @IsNotEmpty()
   oldPassword: string;
   @IsString()
-  @ApiProperty({ default: 'qwerty1234' })
+  @IsNotEmpty()
   newPassword: string;
 }
 
 export class User {
-  @ApiProperty()
   @IsUUID()
   id: string;
 

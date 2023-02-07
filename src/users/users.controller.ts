@@ -13,10 +13,12 @@ import {
   Header,
   ParseUUIDPipe,
 } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { CreateUserDto, UpdateUserDto, User } from './users.entitie';
 import { UsersService } from './users.service';
 
 @Controller('user')
+@ApiTags('user')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 

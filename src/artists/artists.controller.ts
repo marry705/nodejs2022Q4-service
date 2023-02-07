@@ -11,10 +11,12 @@ import {
   Header,
   ParseUUIDPipe,
 } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { Artist, UpdateArtistDto } from './artists.entitie';
 import { ArtistsService } from './artists.service';
 
 @Controller('artist')
+@ApiTags('artist')
 export class ArtistsController {
   constructor(private readonly artistsServise: ArtistsService) {}
 

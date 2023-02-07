@@ -11,10 +11,12 @@ import {
   Header,
   ParseUUIDPipe,
 } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { Track, UpdateTrackDto } from './tracks.entitie';
 import { TracksService } from './tracks.service';
 
 @Controller('track')
+@ApiTags('track')
 export class TracksController {
   constructor(private readonly trackServise: TracksService) {}
 

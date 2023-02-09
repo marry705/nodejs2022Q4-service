@@ -1,0 +1,31 @@
+version: '3.8'
+services:
+  db:
+    container_name: postgres
+    image: postgres:15.1-alpine
+    env_file:
+      - .env
+    ports:
+      - ${DB_PORT}:${DB_PORT}
+    restart: always
+
+  nest_app:
+    container_name: app
+    build:
+      dockerfile: Dockerfile
+      context: .
+      target: development
+    image: app
+    volumes:
+      - .:/app
+      - /app/node_modules
+    env_file:
+    - .env
+    ports:
+      - ${PORT}:${PORT}
+    command: npm run start:dev
+    restart: always
+
+volumes:
+  db:
+    driver: local

@@ -3,19 +3,33 @@ services:
   db:
     container_name: postgres
     image: postgres:15.1-alpine
+    build:
+      dockerfile: src/store/Dockerfile
+      context: .
+    volumes: 
+      - ./postgres-data:/var/lib/postgresql/data
     env_file:
       - .env
     ports:
       - ${DB_PORT}:${DB_PORT}
+    logging:
+      options:
+        max-size: 10m
+        max-file: "3"
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     restart: always
 
   nest_app:
     container_name: app
+    image: app
     build:
       dockerfile: Dockerfile
       context: .
       target: development
-    image: app
     volumes:
       - /app
       - /app/node_modules

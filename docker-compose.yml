@@ -1,13 +1,12 @@
-version: '3.8'
+version: '3.9'
 services:
   db:
-    container_name: postgres
-    image: postgres:15.1-alpine
+    container_name: db
     build:
-      dockerfile: src/store/Dockerfile
-      context: .
-    volumes: 
-      - ./postgres-data:/var/lib/postgresql/data
+      dockerfile: Dockerfile
+      context: src/store
+    volumes:
+      - ./db:/var/lib/postgresql/data
     env_file:
       - .env
     ports:
@@ -22,10 +21,11 @@ services:
       timeout: 5s
       retries: 5
     restart: always
+    networks:
+      - db
 
   nest_app:
     container_name: app
-    image: app
     build:
       dockerfile: Dockerfile
       context: .
@@ -39,7 +39,14 @@ services:
       - ${PORT}:${PORT}
     command: npm run start:dev
     restart: always
+    depends_on:
+      - db
+    networks:
+      - db
 
 volumes:
   db:
-    driver: local
+
+networks:
+  db:
+    driver: bridge

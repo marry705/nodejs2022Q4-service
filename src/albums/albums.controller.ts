@@ -13,10 +13,8 @@ import {
 } from '@nestjs/common';
 import { AlbumsService } from './albums.service';
 import { Album, UpdateAlbumDto } from './albums.entitie';
-import { ApiTags } from '@nestjs/swagger';
 
 @Controller('album')
-@ApiTags('album')
 export class AlbumsController {
   constructor(private readonly albumServise: AlbumsService) {}
 

@@ -15,12 +15,11 @@ import { User } from 'src/users/users.entitie';
       inject: [ConfigService],
       useFactory: () => ({
         type: 'postgres',
-        // host is name of container
-        host: 'db',
-        port: parseInt(env.DB_PORT) ?? 5432,
-        username: env.POSTGRES_USER ?? 'admin',
-        password: env.POSTGRES_PASSWORD ?? 'admin',
-        database: env.POSTGRES_DB ?? 'postgres',
+        host: env.POSTGRES_HOST as string,
+        port: parseInt(env.DB_PORT as string) as number,
+        username: env.POSTGRES_USER as string,
+        password: env.POSTGRES_PASSWORD as string,
+        database: env.POSTGRES_DB as string,
         entities: [User],
         synchronize: false,
       }),

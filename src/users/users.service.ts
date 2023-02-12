@@ -27,19 +27,16 @@ export class UsersService {
     return user;
   }
 
-  public async create({ login, password }: CreateUserDto): Promise<User> {
-    const newUser = new User({
-      login,
-      password,
+  public async create(userData: CreateUserDto): Promise<User> {
+    const newUser = await this.usersRepository.create({
+      ...userData,
       id: v4(),
       version: 1,
       createdAt: Date.now(),
       updatedAt: Date.now(),
     });
 
-    await this.usersRepository.save(newUser);
-
-    return newUser;
+    return await this.usersRepository.save(newUser);
   }
 
   public async update(

@@ -26,26 +26,26 @@ export class UpdateUserDto {
   readonly newPassword: string;
 }
 
-@Entity()
+@Entity({ name: 'Users' })
 export class User {
   @IsUUID()
-  @PrimaryGeneratedColumn({ name: 'user_id' })
+  @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ nullable: false, default: '' })
+  @Column({ nullable: false })
   login: string;
 
-  @Column({ nullable: false, default: 1 })
+  @Column({ default: 1 })
   version: number;
 
-  @Column({ default: Date.now() })
+  @Column({ default: Math.floor(Date.now() / 1000) })
   createdAt: number;
 
-  @Column({ default: Date.now() })
+  @Column({ default: Math.floor(Date.now() / 1000) })
   updatedAt: number;
 
   @Exclude()
-  @Column({ nullable: false, default: '' })
+  @Column({ nullable: false })
   password: string;
 
   constructor(partial: Partial<User>) {

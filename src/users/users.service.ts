@@ -32,8 +32,8 @@ export class UsersService {
       ...userData,
       id: v4(),
       version: 1,
-      createdAt: Date.now(),
-      updatedAt: Date.now(),
+      createdAt: Math.floor(Date.now() / 1000),
+      updatedAt: Math.floor(Date.now() / 1000),
     });
 
     return await this.usersRepository.save(newUser);
@@ -56,7 +56,7 @@ export class UsersService {
     await this.usersRepository.update(id, {
       password: updateUserData.newPassword,
       version: user.version + 1,
-      updatedAt: Date.now(),
+      updatedAt: Math.floor(Date.now() / 1000),
     });
 
     return await this.usersRepository.findOneBy({ id });

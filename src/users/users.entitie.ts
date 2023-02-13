@@ -43,8 +43,4 @@ export class User {
   @Exclude()
   @Column({ nullable: false })
   password: string;
-
-  constructor(partial: Partial<User>) {
-    Object.assign(this, partial);
-  }
 }

@@ -12,7 +12,11 @@ import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [
-    TypeOrmModule.forRoot(ormConfig),
+    TypeOrmModule.forRoot({
+      ...ormConfig,
+      autoLoadEntities: true,
+      // migrationsRun: true,
+    }),
     UsersModule,
     ArtistsModule,
     TracksModule,

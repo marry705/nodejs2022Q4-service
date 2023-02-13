@@ -8,7 +8,7 @@ import { Track, UpdateTrackDto } from './tracks.entitie';
 export class TracksService {
   constructor(
     @InjectRepository(Track)
-    private tracksRepository: Repository<Track>,
+    private readonly tracksRepository: Repository<Track>,
   ) {}
 
   public async getAll(): Promise<Track[]> {

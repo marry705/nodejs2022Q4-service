@@ -5,8 +5,16 @@ import {
   IsString,
   IsUUID,
 } from 'class-validator';
+import { Artist } from 'src/artists/artists.entitie';
 import { Track } from 'src/tracks/tracks.entitie';
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
 export class UpdateAlbumDto {
   @IsNotEmpty()
@@ -39,12 +47,12 @@ export class Album {
   @Column({ nullable: true })
   artistId: string;
 
-  @OneToMany(() => Track, (track: Track) => track.albumId, {
+  @ManyToOne(() => Artist, (artist) => artist.albums, {
     onDelete: 'SET NULL',
   })
-  tracks: Track[];
+  @JoinColumn({ name: 'artistId' })
+  artist: Artist;
 
-  constructor(partial: Partial<Album>) {
-    Object.assign(this, partial);
-  }
+  @OneToMany(() => Track, (track: Track) => track.albumId)
+  tracks: Track[];
 }

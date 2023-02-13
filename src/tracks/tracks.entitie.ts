@@ -7,7 +7,13 @@ import {
 } from 'class-validator';
 import { Album } from 'src/albums/albums.entitie';
 import { Artist } from 'src/artists/artists.entitie';
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
 export class UpdateTrackDto {
   @IsNotEmpty()
@@ -43,6 +49,12 @@ export class Track {
   @Column({ nullable: true })
   artistId: string;
 
+  @ManyToOne(() => Artist, (artist) => artist.tracks, {
+    onDelete: 'SET NULL',
+  })
+  @JoinColumn({ name: 'artistId' })
+  artist: Artist;
+
   @IsOptional()
   @Column({ nullable: true })
   albumId: string;
@@ -50,14 +62,6 @@ export class Track {
   @ManyToOne(() => Album, (album: Album) => album.tracks, {
     onDelete: 'SET NULL',
   })
+  @JoinColumn({ name: 'albumId' })
   album: Album[];
-
-  @ManyToOne(() => Artist, (artist: Artist) => artist.tracks, {
-    onDelete: 'SET NULL',
-  })
-  artist: Artist[];
-
-  constructor(partial: Partial<Track>) {
-    Object.assign(this, partial);
-  }
 }

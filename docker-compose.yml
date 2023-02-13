@@ -32,7 +32,7 @@ services:
       target: development
     volumes:
       - /app
-      - /app/node_modules
+      - ignore:/app/node_modules
     env_file:
     - .env
     environment:
@@ -50,6 +50,8 @@ services:
 
 volumes:
   db:
+  app:
+  ignore:
 
 networks:
   nodejs-network:

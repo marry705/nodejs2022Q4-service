@@ -20,15 +20,18 @@ export class FavoritesService {
   ) {}
 
   public async getAll(): Promise<Favorite> {
-    const favorites = await this.favoritesRepository.find()[0];
+    const [favorites] = await this.favoritesRepository.find({
+      relations: {
+        tracks: true,
+        albums: true,
+        artists: true,
+      },
+    });
 
-    // if (!favorites.length) {
-    //   favorites = this.favoritesRepository.create({
-    //     artists: [],
-    //     albums: [],
-    //     tracks: [],
-    //   });
-    // }
+    if (!favorites) {
+      await this.favoritesRepository.save(new Favorite());
+      return this.getAll();
+    }
 
     return favorites;
   }

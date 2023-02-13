@@ -1,5 +1,4 @@
-# BUILD FOR LOCAL DEVELOPMENT
-FROM node:18-alpine as development
+FROM node:18-alpine
 
 WORKDIR /app
 

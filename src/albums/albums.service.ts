@@ -1,18 +1,24 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { removeFromFavoritesByKey } from 'src/favorites/helper';
-import { Store } from 'src/store/store';
-import { Track } from 'src/tracks/tracks.entitie';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 import { v4 } from 'uuid';
 import { Album, UpdateAlbumDto } from './albums.entitie';
 
 @Injectable()
 export class AlbumsService {
-  public getAll(): Album[] {
-    return Store.getInstance().albums;
+  constructor(
+    @InjectRepository(Album)
+    private albumsRepository: Repository<Album>,
+  ) {}
+
+  public async getAll(): Promise<Album[]> {
+    const albums = await this.albumsRepository.find();
+
+    return albums;
   }
 
-  public getById(id: string): Album {
-    const album = Store.getInstance().albums.find((album) => album.id === id);
+  public async getById(id: string): Promise<Album> {
+    const album = await this.albumsRepository.findOneBy({ id });
 
     if (!album) {
       throw new HttpException('NOT_FOUND', HttpStatus.NOT_FOUND);
@@ -21,58 +27,37 @@ export class AlbumsService {
     return album;
   }
 
-  public create(createAlbumData: UpdateAlbumDto): Album {
-    const newAlbum = new Album({
+  public async create(createAlbumData: UpdateAlbumDto): Promise<Album> {
+    const newAlbum = this.albumsRepository.create({
       ...createAlbumData,
       id: v4(),
     });
 
-    Store.getInstance().albums.push(newAlbum);
-
-    return newAlbum;
+    return await this.albumsRepository.save(newAlbum);
   }
 
-  public update(id: string, updateAlbumData: UpdateAlbumDto): Album {
-    const albumIndex = Store.getInstance().albums.findIndex(
-      (album) => album.id == id,
-    );
+  public async update(
+    id: string,
+    updateAlbumData: UpdateAlbumDto,
+  ): Promise<Album> {
+    const album = await this.albumsRepository.findOneBy({ id });
 
-    if (albumIndex === -1) {
+    if (!album) {
       throw new HttpException('NOT_FOUND', HttpStatus.NOT_FOUND);
     }
 
-    const updateAlbum = new Album({ id, ...updateAlbumData });
+    await this.albumsRepository.update(id, { ...updateAlbumData });
 
-    Store.getInstance().albums.splice(albumIndex, 1, updateAlbum);
-
-    return updateAlbum;
+    return await this.albumsRepository.findOneBy({ id });
   }
 
-  public delete(id: string): void {
-    const albumIndex = Store.getInstance().albums.findIndex(
-      (album) => album.id == id,
-    );
+  public async delete(id: string): Promise<void> {
+    const album = await this.albumsRepository.findOneBy({ id });
 
-    if (albumIndex === -1) {
+    if (!album) {
       throw new HttpException('NOT_FOUND', HttpStatus.NOT_FOUND);
     }
 
-    const tacks = Store.getInstance().tracks.filter(
-      (track) => track.albumId === id,
-    );
-
-    for (const track of tacks) {
-      track.albumId = null;
-
-      const trackIndex = Store.getInstance().tracks.findIndex(
-        (_track) => _track.id == track.id,
-      );
-
-      Store.getInstance().tracks.splice(trackIndex, 1, new Track({ ...track }));
-    }
-
-    removeFromFavoritesByKey(id, 'albums');
-
-    Store.getInstance().albums.splice(albumIndex, 1);
+    await this.albumsRepository.delete({ id });
   }
 }

@@ -1,3 +1,4 @@
+import * as dotenv from 'dotenv';
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -7,6 +8,8 @@ import { env } from 'process';
 // import { Favorite } from 'src/favorites/favorites.entitie';
 // import { Track } from 'src/tracks/tracks.entitie';
 import { User } from 'src/users/users.entitie';
+
+dotenv.config();
 
 @Module({
   imports: [
@@ -21,7 +24,8 @@ import { User } from 'src/users/users.entitie';
         password: env.POSTGRES_PASSWORD as string,
         database: env.POSTGRES_DB as string,
         entities: [User],
-        synchronize: false,
+        synchronize: true,
+        logging: true,
       }),
     }),
   ],

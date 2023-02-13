@@ -21,38 +21,38 @@ export class AlbumsController {
   @Get()
   @HttpCode(HttpStatus.OK)
   @Header('Accept', 'application/json')
-  getAll(): Album[] {
-    return this.albumServise.getAll();
+  async getAll(): Promise<Album[]> {
+    return await this.albumServise.getAll();
   }
 
   @Get(':id')
   @HttpCode(HttpStatus.OK)
   @Header('Accept', 'application/json')
-  getOne(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string): Album {
-    return this.albumServise.getById(id);
+  async getOne(@Param('id', ParseUUIDPipe) id: string): Promise<Album> {
+    return await this.albumServise.getById(id);
   }
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
   @Header('Accept', 'application/json')
-  delete(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string) {
-    return this.albumServise.delete(id);
+  async delete(@Param('id', ParseUUIDPipe) id: string): Promise<void> {
+    return await this.albumServise.delete(id);
   }
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
   @Header('Accept', 'application/json')
-  create(@Body() createAlbumDto: UpdateAlbumDto): Album {
-    return this.albumServise.create(createAlbumDto);
+  async create(@Body() createAlbumDto: UpdateAlbumDto): Promise<Album> {
+    return await this.albumServise.create(createAlbumDto);
   }
 
   @Put(':id')
   @HttpCode(HttpStatus.OK)
   @Header('Accept', 'application/json')
-  update(
-    @Param('id', new ParseUUIDPipe({ version: '4' })) id: string,
+  async update(
+    @Param('id', ParseUUIDPipe) id: string,
     @Body() updateAlbumData: UpdateAlbumDto,
-  ): Album {
-    return this.albumServise.update(id, updateAlbumData);
+  ): Promise<Album> {
+    return await this.albumServise.update(id, updateAlbumData);
   }
 }

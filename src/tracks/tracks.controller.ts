@@ -21,38 +21,38 @@ export class TracksController {
   @Get()
   @HttpCode(HttpStatus.OK)
   @Header('Accept', 'application/json')
-  getAll(): Track[] {
-    return this.trackServise.getAll();
+  async getAll(): Promise<Track[]> {
+    return await this.trackServise.getAll();
   }
 
   @Get(':id')
   @HttpCode(HttpStatus.OK)
   @Header('Accept', 'application/json')
-  getOne(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string): Track {
-    return this.trackServise.getById(id);
+  async getOne(@Param('id', ParseUUIDPipe) id: string): Promise<Track> {
+    return await this.trackServise.getById(id);
   }
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
   @Header('Accept', 'application/json')
-  delete(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string) {
-    return this.trackServise.delete(id);
+  async delete(@Param('id', ParseUUIDPipe) id: string): Promise<void> {
+    return await this.trackServise.delete(id);
   }
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
   @Header('Accept', 'application/json')
-  create(@Body() createTrackDto: UpdateTrackDto): Track {
-    return this.trackServise.create(createTrackDto);
+  async create(@Body() createTrackDto: UpdateTrackDto): Promise<Track> {
+    return await this.trackServise.create(createTrackDto);
   }
 
   @Put(':id')
   @HttpCode(HttpStatus.OK)
   @Header('Accept', 'application/json')
-  update(
-    @Param('id', new ParseUUIDPipe({ version: '4' })) id: string,
+  async update(
+    @Param('id', ParseUUIDPipe) id: string,
     @Body() updateTrackData: UpdateTrackDto,
-  ): Track {
-    return this.trackServise.update(id, updateTrackData);
+  ): Promise<Track> {
+    return await this.trackServise.update(id, updateTrackData);
   }
 }

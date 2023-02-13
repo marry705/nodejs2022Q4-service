@@ -1,20 +1,24 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { removeFromFavoritesByKey } from 'src/favorites/helper';
-import { Store } from 'src/store/store';
-import { Track } from 'src/tracks/tracks.entitie';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 import { v4 } from 'uuid';
 import { Artist, UpdateArtistDto } from './artists.entitie';
 
 @Injectable()
 export class ArtistsService {
-  public getAll(): Artist[] {
-    return Store.getInstance().artists;
+  constructor(
+    @InjectRepository(Artist)
+    private artistsRepository: Repository<Artist>,
+  ) {}
+
+  public async getAll(): Promise<Artist[]> {
+    const artists = await this.artistsRepository.find();
+
+    return artists;
   }
 
-  public getById(id: string): Artist {
-    const artist = Store.getInstance().artists.find(
-      (artist) => artist.id === id,
-    );
+  public async getById(id: string): Promise<Artist> {
+    const artist = await this.artistsRepository.findOneBy({ id });
 
     if (!artist) {
       throw new HttpException('NOT_FOUND', HttpStatus.NOT_FOUND);
@@ -23,63 +27,37 @@ export class ArtistsService {
     return artist;
   }
 
-  public create({ name, grammy }: UpdateArtistDto): Artist {
-    const newArtist = new Artist({
-      name,
-      grammy,
+  public async create(artistData: UpdateArtistDto): Promise<Artist> {
+    const newArtist = this.artistsRepository.create({
+      ...artistData,
       id: v4(),
     });
 
-    Store.getInstance().artists.push(newArtist);
-
-    return newArtist;
+    return await this.artistsRepository.save(newArtist);
   }
 
-  public update(id: string, updateArtistData: UpdateArtistDto): Artist {
-    const artist = Store.getInstance().artists.find(
-      (artist) => artist.id == id,
-    );
+  public async update(
+    id: string,
+    updateArtistData: UpdateArtistDto,
+  ): Promise<Artist> {
+    const artist = await this.artistsRepository.findOneBy({ id });
 
     if (!artist) {
       throw new HttpException('NOT_FOUND', HttpStatus.NOT_FOUND);
     }
 
-    const artistIndex = Store.getInstance().artists.findIndex(
-      (track) => track.id == id,
-    );
+    await this.artistsRepository.update(id, { ...updateArtistData });
 
-    const updateArtist = new Artist({ id, ...updateArtistData });
-
-    Store.getInstance().artists.splice(artistIndex, 1, updateArtist);
-
-    return updateArtist;
+    return await this.artistsRepository.findOneBy({ id });
   }
 
-  public delete(id: string): void {
-    const artistIndex = Store.getInstance().artists.findIndex(
-      (artist) => artist.id == id,
-    );
+  public async delete(id: string): Promise<void> {
+    const artist = await this.artistsRepository.findOneBy({ id });
 
-    if (artistIndex === -1) {
+    if (!artist) {
       throw new HttpException('NOT_FOUND', HttpStatus.NOT_FOUND);
     }
 
-    const tacks = Store.getInstance().tracks.filter(
-      (track) => track.artistId === id,
-    );
-
-    for (const track of tacks) {
-      track.artistId = null;
-
-      const trackIndex = Store.getInstance().tracks.findIndex(
-        (_track) => _track.id == track.id,
-      );
-
-      Store.getInstance().tracks.splice(trackIndex, 1, new Track({ ...track }));
-    }
-
-    removeFromFavoritesByKey(id, 'artists');
-
-    Store.getInstance().artists.splice(artistIndex, 1);
+    await this.artistsRepository.delete({ id });
   }
 }

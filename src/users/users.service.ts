@@ -31,9 +31,6 @@ export class UsersService {
     const newUser = await this.usersRepository.create({
       ...userData,
       id: v4(),
-      version: 1,
-      createdAt: Math.floor(Date.now() / 1000),
-      updatedAt: Math.floor(Date.now() / 1000),
     });
 
     return await this.usersRepository.save(newUser);

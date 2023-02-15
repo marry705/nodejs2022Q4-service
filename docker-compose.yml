@@ -2,6 +2,7 @@ version: '3.9'
 services:
   db:
     container_name: db
+    image: app/db:db
     build:
       dockerfile: Dockerfile
       context: src/db
@@ -20,18 +21,19 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
-    restart: unless-stopped
+    restart: always
     networks:
       - nodejs-network
 
   nest_app:
-    container_name: app
+    container_name: nest_app
+    image: app/marry705:app
     build:
       dockerfile: Dockerfile
       context: .
     volumes:
-      - /app
-      - /app/node_modules
+      - ./:/app/
+      - ignore:/app/node_modules
     env_file:
     - .env
     environment:
@@ -41,14 +43,15 @@ services:
     ports:
       - ${PORT}:${PORT}
     command: npm run start:dev
-    restart: unless-stopped
     depends_on:
       - db
+    restart: always
     networks:
       - nodejs-network
 
 volumes:
   db:
+  ignore:
 
 networks:
   nodejs-network:

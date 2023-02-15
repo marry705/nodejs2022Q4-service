@@ -1,13 +1,13 @@
 FROM node:18-alpine
 
-WORKDIR /app
+WORKDIR /app/
 
 COPY --chown=node:node package*.json ./
+
+COPY --chown=node:node tsconfig*.json ./
 
 RUN npm install
 
 COPY --chown=node:node . .
-
-USER node
 
 CMD ["npm", "run", "start:dev"]

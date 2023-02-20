@@ -1,4 +1,9 @@
+.gitignore
+.env*
+
+/dist
 /node_modules
-.env.example
+
+.dockerignore
 Dockerfile
-./src/db/Dockerfile
+docker-compose.yaml

@@ -2,7 +2,7 @@ version: '3.9'
 services:
   db:
     container_name: db
-    image: app/db:db
+    image: marry705/nodejs2022q4-db
     build:
       dockerfile: Dockerfile
       context: src/db
@@ -25,9 +25,9 @@ services:
     networks:
       - nodejs-network
 
-  nest_app:
-    container_name: nest_app
-    image: app/marry705:app
+  app:
+    container_name: app
+    image: marry705/nodejs2022q4-app
     build:
       dockerfile: Dockerfile
       context: .

@@ -4,9 +4,7 @@ WORKDIR /app/
 
 COPY --chown=node:node package*.json ./
 
-COPY --chown=node:node tsconfig*.json ./
-
-RUN npm install
+RUN npm install && npm cache clean --force
 
 COPY --chown=node:node . .
 

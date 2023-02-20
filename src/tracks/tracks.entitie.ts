@@ -4,6 +4,7 @@ import {
   IsOptional,
   IsString,
   IsUUID,
+  Min,
 } from 'class-validator';
 import { Album } from 'src/albums/albums.entitie';
 import { Artist } from 'src/artists/artists.entitie';
@@ -22,6 +23,7 @@ export class UpdateTrackDto {
 
   @IsNotEmpty()
   @IsNumber()
+  @Min(0)
   duration: number;
 
   @IsOptional()

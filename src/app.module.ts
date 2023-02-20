@@ -6,17 +6,13 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ArtistsModule } from './artists/artists.module';
 import { FavoritesModule } from './favorites/favorites.module';
-import { ormConfig } from './orm.config';
+import { configOptions } from './orm.config';
 import { TracksModule } from './tracks/tracks.module';
 import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [
-    TypeOrmModule.forRoot({
-      ...ormConfig,
-      autoLoadEntities: true,
-      // migrationsRun: true,
-    }),
+    TypeOrmModule.forRoot(configOptions),
     UsersModule,
     ArtistsModule,
     TracksModule,

@@ -9,7 +9,8 @@
     "prebuild": "rimraf dist",
     "build": "nest build",
     "docker:build": "docker-compose up --build",
-    "docker:test": "docker exec nest_app npm run test ",
+    "docker:test": "docker exec nest_app npm run test",
+    "docker:scan": "docker scan app/marry705:app && docker scan app/db:db",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
     "start:dev": "nest start --watch",
@@ -20,7 +21,9 @@
     "test:auth": "cross-env TEST_MODE=auth jest --config ./test/jest-e2e.json",
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
-    "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand"
+    "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
+    "typeorm": "npx typeorm --d ./dist/ormMigrations.config.js",
+    "migration:generate": "npm run typeorm -- migration:generate ./src/db/migrations/migrations/$npm_config_name"
   },
   "dependencies": {
     "@nestjs/common": "^8.0.0",

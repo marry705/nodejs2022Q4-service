@@ -9,9 +9,9 @@ import { User } from './users/users.entitie';
 
 dotenv.config();
 
-export const configOptions: DataSourceOptions = {
+const configOptions: DataSourceOptions = {
   type: 'postgres',
-  host: env.POSTGRES_HOST as string,
+  host: 'localhost',
   port: parseInt(env.DB_PORT as string) as number,
   username: env.POSTGRES_USER as string,
   password: env.POSTGRES_PASSWORD as string,
@@ -19,6 +19,7 @@ export const configOptions: DataSourceOptions = {
   logging: true,
   entities: [User, Track, Album, Artist, Favorite],
   synchronize: false,
-  migrationsRun: true,
   migrations: [__dirname + '/db/migrations/*.js'],
 };
+
+export const dataSource = new DataSource(configOptions);

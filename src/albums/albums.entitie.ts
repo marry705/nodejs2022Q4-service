@@ -4,6 +4,7 @@ import {
   IsOptional,
   IsString,
   IsUUID,
+  Min,
 } from 'class-validator';
 import { Artist } from 'src/artists/artists.entitie';
 import { Track } from 'src/tracks/tracks.entitie';
@@ -23,6 +24,7 @@ export class UpdateAlbumDto {
 
   @IsNotEmpty()
   @IsNumber()
+  @Min(0)
   year: number;
 
   @IsOptional()

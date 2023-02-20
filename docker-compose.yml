@@ -1,0 +1,58 @@
+version: '3.9'
+services:
+  db:
+    container_name: db
+    image: marry705/nodejs2022q4-db
+    build:
+      dockerfile: Dockerfile
+      context: src/db
+    volumes:
+      - ./db:/var/lib/postgresql/data
+    env_file:
+      - .env
+    environment:
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    ports:
+      - ${DB_PORT}:${DB_PORT}
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: always
+    networks:
+      - nodejs-network
+
+  app:
+    container_name: app
+    image: marry705/nodejs2022q4-app
+    build:
+      dockerfile: Dockerfile
+      context: .
+    volumes:
+      - ./:/app/
+      - ignore:/app/node_modules
+    env_file:
+    - .env
+    environment:
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    ports:
+      - ${PORT}:${PORT}
+    command: npm run start:dev
+    depends_on:
+      - db
+    restart: always
+    networks:
+      - nodejs-network
+
+volumes:
+  db:
+  ignore:
+
+networks:
+  nodejs-network:
+    driver: bridge

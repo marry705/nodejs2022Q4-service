@@ -1,16 +1,24 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { Store } from 'src/store/store';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 import { v4 } from 'uuid';
 import { CreateUserDto, UpdateUserDto, User } from './users.entitie';
 
 @Injectable()
 export class UsersService {
-  public getAll(): User[] {
-    return Store.getInstance().users;
+  constructor(
+    @InjectRepository(User)
+    private readonly usersRepository: Repository<User>,
+  ) {}
+
+  public async getAll(): Promise<User[]> {
+    const users = await this.usersRepository.find();
+
+    return users;
   }
 
-  public getById(id: string): User {
-    const user = Store.getInstance().users.find((user) => user.id === id);
+  public async getById(id: string): Promise<User> {
+    const user = await this.usersRepository.findOneBy({ id });
 
     if (!user) {
       throw new HttpException('NOT_FOUND', HttpStatus.NOT_FOUND);
@@ -19,23 +27,20 @@ export class UsersService {
     return user;
   }
 
-  public create({ login, password }: CreateUserDto): User {
-    const newUser = new User({
-      login,
-      password,
+  public async create(userData: CreateUserDto): Promise<User> {
+    const newUser = await this.usersRepository.create({
+      ...userData,
       id: v4(),
-      version: 1,
-      createdAt: Date.now(),
-      updatedAt: Date.now(),
     });
 
-    Store.getInstance().users.push(newUser);
-
-    return newUser;
+    return await this.usersRepository.save(newUser);
   }
 
-  public update(id: string, updateUserData: UpdateUserDto): User {
-    const user = Store.getInstance().users.find((user) => user.id === id);
+  public async update(
+    id: string,
+    updateUserData: UpdateUserDto,
+  ): Promise<User> {
+    const user = await this.usersRepository.findOneBy({ id });
 
     if (!user) {
       throw new HttpException('NOT_FOUND', HttpStatus.NOT_FOUND);
@@ -45,28 +50,22 @@ export class UsersService {
       throw new HttpException('FORBIDDEN', HttpStatus.FORBIDDEN);
     }
 
-    user.password = updateUserData.newPassword;
-    user.version += 1;
-    user.updatedAt = Date.now();
+    await this.usersRepository.update(id, {
+      password: updateUserData.newPassword,
+      version: user.version + 1,
+      updatedAt: Math.floor(Date.now() / 1000),
+    });
 
-    const userIndex = Store.getInstance().users.findIndex(
-      (user) => user.id == id,
-    );
-
-    Store.getInstance().users.splice(userIndex, 1, user);
-
-    return user;
+    return await this.usersRepository.findOneBy({ id });
   }
 
-  public delete(id: string): void {
-    const userIndex = Store.getInstance().users.findIndex(
-      (user) => user.id == id,
-    );
+  public async delete(id: string): Promise<void> {
+    const user = await this.usersRepository.findOneBy({ id });
 
-    if (userIndex === -1) {
+    if (!user) {
       throw new HttpException('NOT_FOUND', HttpStatus.NOT_FOUND);
     }
 
-    Store.getInstance().users.splice(userIndex, 1);
+    await this.usersRepository.delete({ id });
   }
 }

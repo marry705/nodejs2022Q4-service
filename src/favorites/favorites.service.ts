@@ -1,33 +1,66 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { Store } from 'src/store/store';
 import { Album } from 'src/albums/albums.entitie';
 import { Track } from 'src/tracks/tracks.entitie';
 import { Artist } from 'src/artists/artists.entitie';
 import { Favorite } from './favorites.entitie';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class FavoritesService {
-  public getAll(): Favorite {
-    return Store.getInstance().favorites;
+  constructor(
+    @InjectRepository(Favorite)
+    private readonly favoritesRepository: Repository<Favorite>,
+    @InjectRepository(Artist)
+    private readonly artistsRepository: Repository<Artist>,
+    @InjectRepository(Album)
+    private readonly albumsRepository: Repository<Album>,
+    @InjectRepository(Track)
+    private readonly tracksRepository: Repository<Track>,
+  ) {}
+
+  public async getAll(): Promise<Favorite> {
+    const [favorites] = await this.favoritesRepository.find({
+      relations: {
+        tracks: true,
+        albums: true,
+        artists: true,
+      },
+    });
+
+    if (!favorites) {
+      await this.favoritesRepository.save(new Favorite());
+      return this.getAll();
+    }
+
+    return favorites;
   }
 
-  public addAlbom(id: string): Album {
-    const albom = Store.getInstance().albums.find((album) => album.id == id);
+  public async addAlbum(id: string): Promise<Album> {
+    const favorites = await this.getAll();
+    const album = await this.albumsRepository.findOneBy({ id });
 
-    if (!albom) {
+    if (!album) {
       throw new HttpException(
         'UNPROCESSABLE_ENTITY',
         HttpStatus.UNPROCESSABLE_ENTITY,
       );
     }
 
-    Store.getInstance().favorites.albums.push(albom);
+    const isAlbum = favorites.albums.includes(album);
 
-    return albom;
+    if (!isAlbum) {
+      favorites.albums.push(album);
+    }
+
+    await this.favoritesRepository.save(favorites);
+
+    return album;
   }
 
-  public addTrack(id: string): Track {
-    const track = Store.getInstance().tracks.find((track) => track.id == id);
+  public async addTrack(id: string): Promise<Track> {
+    const favorites = await this.getAll();
+    const track = await this.tracksRepository.findOneBy({ id });
 
     if (!track) {
       throw new HttpException(
@@ -36,15 +69,20 @@ export class FavoritesService {
       );
     }
 
-    Store.getInstance().favorites.tracks.push(track);
+    const isTrack = favorites.tracks.includes(track);
+
+    if (!isTrack) {
+      favorites.tracks.push(track);
+    }
+
+    await this.favoritesRepository.save(favorites);
 
     return track;
   }
 
-  public addArtist(id: string): Artist {
-    const artist = Store.getInstance().artists.find(
-      (artist) => artist.id == id,
-    );
+  public async addArtist(id: string): Promise<Artist> {
+    const favorites = await this.getAll();
+    const artist = await this.artistsRepository.findOneBy({ id });
 
     if (!artist) {
       throw new HttpException(
@@ -53,37 +91,46 @@ export class FavoritesService {
       );
     }
 
-    Store.getInstance().favorites.artists.push(artist);
+    const isArtist = favorites.artists.includes(artist);
+
+    if (!isArtist) {
+      favorites.artists.push(artist);
+    }
+
+    await this.favoritesRepository.save(favorites);
 
     return artist;
   }
 
-  public deleteTrack(id: string): void {
-    const trackIndex = Store.getInstance().favorites.tracks.findIndex(
-      (track) => track.id == id,
-    );
+  public async deleteTrack(id: string): Promise<void> {
+    const favorites = await this.getAll();
+    const trackIndex = favorites.tracks.findIndex((track) => track.id == id);
 
     if (trackIndex === -1) {
       throw new HttpException('NOT_FOUND', HttpStatus.NOT_FOUND);
     }
 
-    Store.getInstance().favorites.tracks.splice(trackIndex, 1);
+    favorites.tracks.splice(trackIndex, 1);
+
+    await this.favoritesRepository.save(favorites);
   }
 
-  public deleteAlbom(id: string): void {
-    const albomIndex = Store.getInstance().favorites.albums.findIndex(
-      (album) => album.id == id,
-    );
+  public async deleteAlbum(id: string): Promise<void> {
+    const favorites = await this.getAll();
+    const albomIndex = favorites.albums.findIndex((album) => album.id == id);
 
     if (albomIndex === -1) {
       throw new HttpException('NOT_FOUND', HttpStatus.NOT_FOUND);
     }
 
-    Store.getInstance().favorites.albums.splice(albomIndex, 1);
+    favorites.albums.splice(albomIndex, 1);
+
+    await this.favoritesRepository.save(favorites);
   }
 
-  public deleteArtist(id: string): void {
-    const artistIndex = Store.getInstance().favorites.artists.findIndex(
+  public async deleteArtist(id: string): Promise<void> {
+    const favorites = await this.getAll();
+    const artistIndex = favorites.artists.findIndex(
       (artist) => artist.id == id,
     );
 
@@ -91,6 +138,8 @@ export class FavoritesService {
       throw new HttpException('NOT_FOUND', HttpStatus.NOT_FOUND);
     }
 
-    Store.getInstance().favorites.artists.splice(artistIndex, 1);
+    favorites.artists.splice(artistIndex, 1);
+
+    await this.favoritesRepository.save(favorites);
   }
 }

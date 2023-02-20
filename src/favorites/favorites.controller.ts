@@ -9,6 +9,9 @@ import {
   ParseUUIDPipe,
   Post,
 } from '@nestjs/common';
+import { Album } from 'src/albums/albums.entitie';
+import { Artist } from 'src/artists/artists.entitie';
+import { Track } from 'src/tracks/tracks.entitie';
 import { Favorite } from './favorites.entitie';
 import { FavoritesService } from './favorites.service';
 
@@ -18,46 +21,46 @@ export class FavoritesController {
 
   @Get()
   @HttpCode(HttpStatus.OK)
-  getAll(): Favorite {
-    return this.favoritesService.getAll();
+  async getAll(): Promise<Favorite> {
+    return await this.favoritesService.getAll();
   }
 
   @Post('/track/:id')
   @HttpCode(HttpStatus.CREATED)
   @Header('Accept', 'application/json')
-  addTrack(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string) {
-    return this.favoritesService.addTrack(id);
+  async addTrack(@Param('id', ParseUUIDPipe) id: string): Promise<Track> {
+    return await this.favoritesService.addTrack(id);
   }
 
   @Delete('/track/:id')
   @HttpCode(HttpStatus.NO_CONTENT)
-  deleteTrack(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string) {
-    return this.favoritesService.deleteTrack(id);
+  async deleteTrack(@Param('id', ParseUUIDPipe) id: string): Promise<void> {
+    return await this.favoritesService.deleteTrack(id);
   }
 
   @Post('/album/:id')
   @HttpCode(HttpStatus.CREATED)
   @Header('Accept', 'application/json')
-  addAlbom(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string) {
-    return this.favoritesService.addAlbom(id);
+  async addAlbum(@Param('id', ParseUUIDPipe) id: string): Promise<Album> {
+    return await this.favoritesService.addAlbum(id);
   }
 
   @Delete('/album/:id')
   @HttpCode(HttpStatus.NO_CONTENT)
-  deleteAlbom(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string) {
-    return this.favoritesService.deleteAlbom(id);
+  async deleteAlbum(@Param('id', ParseUUIDPipe) id: string): Promise<void> {
+    return await this.favoritesService.deleteAlbum(id);
   }
 
   @Post('/artist/:id')
   @HttpCode(HttpStatus.CREATED)
   @Header('Accept', 'application/json')
-  addArtist(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string) {
-    return this.favoritesService.addArtist(id);
+  async addArtist(@Param('id', ParseUUIDPipe) id: string): Promise<Artist> {
+    return await this.favoritesService.addArtist(id);
   }
 
   @Delete('/artist/:id')
   @HttpCode(HttpStatus.NO_CONTENT)
-  deleteArtist(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string) {
-    return this.favoritesService.deleteArtist(id);
+  async deleteArtist(@Param('id', ParseUUIDPipe) id: string): Promise<void> {
+    return await this.favoritesService.deleteArtist(id);
   }
 }

@@ -20,36 +20,36 @@ export class ArtistsController {
 
   @Get()
   @HttpCode(HttpStatus.OK)
-  getAll(): Artist[] {
-    return this.artistsServise.getAll();
+  async getAll(): Promise<Artist[]> {
+    return await this.artistsServise.getAll();
   }
 
   @Get(':id')
   @HttpCode(HttpStatus.OK)
-  getOne(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string): Artist {
-    return this.artistsServise.getById(id);
-  }
-
-  @Delete(':id')
-  @HttpCode(HttpStatus.NO_CONTENT)
-  delete(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string) {
-    return this.artistsServise.delete(id);
+  async getOne(@Param('id', ParseUUIDPipe) id: string): Promise<Artist> {
+    return await this.artistsServise.getById(id);
   }
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
   @Header('Accept', 'application/json')
-  create(@Body() createArtistDto: UpdateArtistDto): Artist {
-    return this.artistsServise.create(createArtistDto);
+  async create(@Body() createArtistDto: UpdateArtistDto): Promise<Artist> {
+    return await this.artistsServise.create(createArtistDto);
+  }
+
+  @Delete(':id')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async delete(@Param('id', ParseUUIDPipe) id: string): Promise<void> {
+    return await this.artistsServise.delete(id);
   }
 
   @Put(':id')
   @HttpCode(HttpStatus.OK)
   @Header('Accept', 'application/json')
-  update(
-    @Param('id', new ParseUUIDPipe({ version: '4' })) id: string,
+  async update(
+    @Param('id', ParseUUIDPipe) id: string,
     @Body() updateArtistData: UpdateArtistDto,
-  ): Artist {
-    return this.artistsServise.update(id, updateArtistData);
+  ): Promise<Artist> {
+    return await this.artistsServise.update(id, updateArtistData);
   }
 }

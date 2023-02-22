@@ -9,7 +9,7 @@ export class CreateUserDto {
 
   @IsNotEmpty()
   @IsString()
-  readonly password: string;
+  password: string;
 }
 
 export class UpdateUserDto {
@@ -19,7 +19,7 @@ export class UpdateUserDto {
 
   @IsNotEmpty()
   @IsString()
-  readonly newPassword: string;
+  newPassword: string;
 }
 
 @Entity({ name: 'Users' })

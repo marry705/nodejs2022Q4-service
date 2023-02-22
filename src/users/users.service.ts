@@ -29,7 +29,10 @@ export class UsersService {
   }
 
   public async create(userData: CreateUserDto): Promise<User> {
-    userData.password = await hash(userData.password, parseInt(process.env.CRYPT_SALT) ?? 10);
+    userData.password = await hash(
+      userData.password,
+      parseInt(process.env.CRYPT_SALT) ?? 10,
+    );
 
     const newUser = await this.usersRepository.create({
       ...userData,
@@ -49,7 +52,10 @@ export class UsersService {
       throw new HttpException('NOT_FOUND', HttpStatus.NOT_FOUND);
     }
 
-    const isMatchPassword = await compare(updateUserData.oldPassword, user.password);
+    const isMatchPassword = await compare(
+      updateUserData.oldPassword,
+      user.password,
+    );
 
     if (!isMatchPassword) {
       throw new HttpException('FORBIDDEN', HttpStatus.FORBIDDEN);
@@ -57,7 +63,7 @@ export class UsersService {
 
     updateUserData.newPassword = await hash(
       updateUserData.newPassword,
-      parseInt(process.env.CRYPT_SALT) ?? 10
+      parseInt(process.env.CRYPT_SALT) ?? 10,
     );
 
     await this.usersRepository.update(id, {

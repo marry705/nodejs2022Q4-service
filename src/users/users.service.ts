@@ -2,6 +2,7 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { v4 } from 'uuid';
+import { env } from 'process';
 import { compare, hash } from 'bcrypt';
 import { CreateUserDto, UpdateUserDto, User } from './users.entitie';
 
@@ -31,7 +32,7 @@ export class UsersService {
   public async create(userData: CreateUserDto): Promise<User> {
     userData.password = await hash(
       userData.password,
-      parseInt(process.env.CRYPT_SALT) ?? 10,
+      parseInt(env.CRYPT_SALT) ?? 10,
     );
 
     const newUser = await this.usersRepository.create({
@@ -63,7 +64,7 @@ export class UsersService {
 
     updateUserData.newPassword = await hash(
       updateUserData.newPassword,
-      parseInt(process.env.CRYPT_SALT) ?? 10,
+      parseInt(env.CRYPT_SALT) ?? 10,
     );
 
     await this.usersRepository.update(id, {

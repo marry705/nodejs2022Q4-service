@@ -18,7 +18,7 @@ export const configOptions: DataSourceOptions = {
   database: env.POSTGRES_DB as string,
   logging: true,
   entities: [User, Track, Album, Artist, Favorite],
-  synchronize: false,
-  migrationsRun: true,
+  synchronize: true,
+  // migrationsRun: true,
   migrations: [__dirname + '/db/migrations/*.js'],
 };

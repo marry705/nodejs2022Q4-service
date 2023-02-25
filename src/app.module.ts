@@ -1,11 +1,13 @@
-import { Module, ValidationPipe } from '@nestjs/common';
+import { MiddlewareConsumer, Module, ValidationPipe } from '@nestjs/common';
 import { APP_PIPE } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AlbumsModule } from './albums/albums.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ArtistsModule } from './artists/artists.module';
+import { AuthModule } from './auth/auth.module';
 import { FavoritesModule } from './favorites/favorites.module';
+import { LogsMiddleware } from './middleware/logger.middleware';
 import { configOptions } from './orm.config';
 import { TracksModule } from './tracks/tracks.module';
 import { UsersModule } from './users/users.module';
@@ -13,6 +15,7 @@ import { UsersModule } from './users/users.module';
 @Module({
   imports: [
     TypeOrmModule.forRoot(configOptions),
+    AuthModule,
     UsersModule,
     ArtistsModule,
     TracksModule,
@@ -32,4 +35,8 @@ import { UsersModule } from './users/users.module';
     },
   ],
 })
-export class AppModule {}
+export class AppModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(LogsMiddleware).forRoutes('*');
+  }
+}

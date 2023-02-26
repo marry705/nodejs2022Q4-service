@@ -1,12 +1,11 @@
 import { MiddlewareConsumer, Module, ValidationPipe } from '@nestjs/common';
-import { APP_GUARD, APP_PIPE } from '@nestjs/core';
+import { APP_PIPE } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AlbumsModule } from './albums/albums.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ArtistsModule } from './artists/artists.module';
 import { AuthModule } from './auth/auth.module';
-import { JWTGuard } from './auth/guards/jwt.guard';
 import { FavoritesModule } from './favorites/favorites.module';
 // import { LogsMiddleware } from './middleware/logger.middleware';
 import { configOptions } from './orm.config';
@@ -26,10 +25,6 @@ import { UsersModule } from './users/users.module';
   controllers: [AppController],
   providers: [
     AppService,
-    {
-      provide: APP_GUARD,
-      useClass: JWTGuard,
-    },
     {
       provide: APP_PIPE,
       useValue: new ValidationPipe({

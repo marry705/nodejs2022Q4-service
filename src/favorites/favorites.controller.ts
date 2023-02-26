@@ -8,14 +8,17 @@ import {
   Param,
   ParseUUIDPipe,
   Post,
+  UseGuards,
 } from '@nestjs/common';
 import { Album } from 'src/albums/albums.entitie';
 import { Artist } from 'src/artists/artists.entitie';
+import { JWTGuard } from 'src/auth/guards/auth.guard';
 import { Track } from 'src/tracks/tracks.entitie';
 import { Favorite } from './favorites.entitie';
 import { FavoritesService } from './favorites.service';
 
 @Controller('favs')
+@UseGuards(JWTGuard)
 export class FavoritesController {
   constructor(private readonly favoritesService: FavoritesService) {}
 

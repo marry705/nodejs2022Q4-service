@@ -12,11 +12,14 @@ import {
   UseInterceptors,
   Header,
   ParseUUIDPipe,
+  UseGuards,
 } from '@nestjs/common';
+import { JWTGuard } from 'src/auth/guards/auth.guard';
 import { CreateUserDto, UpdateUserDto, User } from './users.entitie';
 import { UsersService } from './users.service';
 
 @Controller('user')
+@UseGuards(JWTGuard)
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 

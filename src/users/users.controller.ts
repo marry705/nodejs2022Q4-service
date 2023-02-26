@@ -14,7 +14,7 @@ import {
   ParseUUIDPipe,
   UseGuards,
 } from '@nestjs/common';
-import { JWTGuard } from 'src/auth/guards/auth.guard';
+import { JWTGuard } from 'src/auth/guards/jwt.guard';
 import { CreateUserDto, UpdateUserDto, User } from './users.entitie';
 import { UsersService } from './users.service';
 

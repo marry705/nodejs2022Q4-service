@@ -12,7 +12,7 @@ import {
 } from '@nestjs/common';
 import { Album } from 'src/albums/albums.entitie';
 import { Artist } from 'src/artists/artists.entitie';
-import { JWTGuard } from 'src/auth/guards/auth.guard';
+import { JWTGuard } from 'src/auth/guards/jwt.guard';
 import { Track } from 'src/tracks/tracks.entitie';
 import { Favorite } from './favorites.entitie';
 import { FavoritesService } from './favorites.service';

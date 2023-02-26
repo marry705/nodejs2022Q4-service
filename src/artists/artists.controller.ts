@@ -12,7 +12,7 @@ import {
   ParseUUIDPipe,
   UseGuards,
 } from '@nestjs/common';
-import { JWTGuard } from 'src/auth/guards/auth.guard';
+import { JWTGuard } from 'src/auth/guards/jwt.guard';
 import { Artist, UpdateArtistDto } from './artists.entitie';
 import { ArtistsService } from './artists.service';
 

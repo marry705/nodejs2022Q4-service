@@ -10,14 +10,11 @@ import {
   HttpStatus,
   Header,
   ParseUUIDPipe,
-  // UseGuards,
 } from '@nestjs/common';
 import { AlbumsService } from './albums.service';
 import { Album, UpdateAlbumDto } from './albums.entitie';
-// import { JWTGuard } from 'src/auth/guards/jwt.guard';
 
 @Controller('album')
-// @UseGuards(JWTGuard)
 export class AlbumsController {
   constructor(private readonly albumServise: AlbumsService) {}
 

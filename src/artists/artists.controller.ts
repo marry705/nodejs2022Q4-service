@@ -10,11 +10,14 @@ import {
   HttpStatus,
   Header,
   ParseUUIDPipe,
+  UseGuards,
 } from '@nestjs/common';
+import { JwtGuard } from 'src/auth/guards/jwt.guard';
 import { Artist, UpdateArtistDto } from './artists.entitie';
 import { ArtistsService } from './artists.service';
 
 @Controller('artist')
+@UseGuards(JwtGuard)
 export class ArtistsController {
   constructor(private readonly artistsServise: ArtistsService) {}
 

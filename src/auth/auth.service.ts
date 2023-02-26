@@ -33,7 +33,7 @@ export class AuthService {
   }
 
   public async signup(createAuthDto: CreateUserDto): Promise<User> {
-    return await this.usersRepository.create(createAuthDto);
+    return await this.usersRepository.save(createAuthDto);
   }
 
   public async login(loginAuthData: CreateUserDto): Promise<JWTTokens> {
@@ -44,7 +44,7 @@ export class AuthService {
     });
 
     const targetUser = await Promise.all(
-      users.map(async (user) => {
+      users.filter(async (user) => {
         const isMatchPassword = await compare(
           loginAuthData.password,
           user.password,

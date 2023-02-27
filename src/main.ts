@@ -18,7 +18,6 @@ async function bootstrap() {
   });
 
   app.useLogger(new LoggerService());
-  // app.useGlobalFilters(new ExceptionFilter());
 
   const document = load(
     readFileSync(join(__dirname, '..', 'doc', 'doc.yaml'), 'utf8'),

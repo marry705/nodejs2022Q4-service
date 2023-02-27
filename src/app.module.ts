@@ -1,5 +1,5 @@
 import { MiddlewareConsumer, Module, ValidationPipe } from '@nestjs/common';
-import { APP_PIPE } from '@nestjs/core';
+import { APP_FILTER, APP_PIPE } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AlbumsModule } from './albums/albums.module';
 import { AppController } from './app.controller';
@@ -7,6 +7,7 @@ import { AppService } from './app.service';
 import { ArtistsModule } from './artists/artists.module';
 import { AuthModule } from './auth/auth.module';
 import { FavoritesModule } from './favorites/favorites.module';
+import { HttpExceptionFilter } from './exceptionFilter/http-exception.filter';
 import { LoggerModule } from './logger/logger.module';
 import { LogsMiddleware } from './middleware/logger.middleware';
 import { configOptions } from './orm.config';
@@ -27,6 +28,10 @@ import { UsersModule } from './users/users.module';
   controllers: [AppController],
   providers: [
     AppService,
+    {
+      provide: APP_FILTER,
+      useClass: HttpExceptionFilter,
+    },
     {
       provide: APP_PIPE,
       useValue: new ValidationPipe({

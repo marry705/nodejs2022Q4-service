@@ -16,9 +16,9 @@ export const configOptions: DataSourceOptions = {
   username: env.POSTGRES_USER as string,
   password: env.POSTGRES_PASSWORD as string,
   database: env.POSTGRES_DB as string,
-  logging: true,
+  logging: false,
   entities: [User, Track, Album, Artist, Favorite],
-  synchronize: false,
-  migrationsRun: true,
+  synchronize: true,
+  // migrationsRun: true,
   migrations: [__dirname + '/db/migrations/*.js'],
 };

@@ -2,6 +2,8 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { v4 } from 'uuid';
+import { env } from 'process';
+import { compare, hash } from 'bcrypt';
 import { CreateUserDto, UpdateUserDto, User } from './users.entitie';
 
 @Injectable()
@@ -28,6 +30,11 @@ export class UsersService {
   }
 
   public async create(userData: CreateUserDto): Promise<User> {
+    userData.password = await hash(
+      userData.password,
+      parseInt(env.CRYPT_SALT) ?? 10,
+    );
+
     const newUser = await this.usersRepository.create({
       ...userData,
       id: v4(),
@@ -46,9 +53,19 @@ export class UsersService {
       throw new HttpException('NOT_FOUND', HttpStatus.NOT_FOUND);
     }
 
-    if (user.password !== updateUserData.oldPassword) {
+    const isMatchPassword = await compare(
+      updateUserData.oldPassword,
+      user.password,
+    );
+
+    if (!isMatchPassword) {
       throw new HttpException('FORBIDDEN', HttpStatus.FORBIDDEN);
     }
+
+    updateUserData.newPassword = await hash(
+      updateUserData.newPassword,
+      parseInt(env.CRYPT_SALT) ?? 10,
+    );
 
     await this.usersRepository.update(id, {
       password: updateUserData.newPassword,

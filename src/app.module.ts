@@ -1,11 +1,15 @@
-import { Module, ValidationPipe } from '@nestjs/common';
+import { MiddlewareConsumer, Module, ValidationPipe } from '@nestjs/common';
 import { APP_PIPE } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AlbumsModule } from './albums/albums.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ArtistsModule } from './artists/artists.module';
+import { AuthModule } from './auth/auth.module';
 import { FavoritesModule } from './favorites/favorites.module';
+import { LoggerModule } from './logger/logger.module';
+import { LoggerService } from './logger/logger.service';
+import { LogsMiddleware } from './middleware/logger.middleware';
 import { configOptions } from './orm.config';
 import { TracksModule } from './tracks/tracks.module';
 import { UsersModule } from './users/users.module';
@@ -18,10 +22,13 @@ import { UsersModule } from './users/users.module';
     TracksModule,
     AlbumsModule,
     FavoritesModule,
+    AuthModule,
+    LoggerModule,
   ],
   controllers: [AppController],
   providers: [
     AppService,
+    LoggerService,
     {
       provide: APP_PIPE,
       useValue: new ValidationPipe({
@@ -32,4 +39,8 @@ import { UsersModule } from './users/users.module';
     },
   ],
 })
-export class AppModule {}
+export class AppModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(LogsMiddleware).forRoutes('*');
+  }
+}

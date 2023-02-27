@@ -24,23 +24,23 @@ export class LoggerService implements LoggerInterface {
     });
   }
 
-  error(message: any, ...optionalParams: any[]): any {
+  public error(message: any, ...optionalParams: any[]): void {
     this.writeLog('error', message, optionalParams);
   }
 
-  warn(message: any, ...optionalParams: any[]): any {
+  public warn(message: any, ...optionalParams: any[]): void {
     this.writeLog('warn', message, optionalParams);
   }
 
-  log(message: any, ...optionalParams: any[]): any {
+  public log(message: any, ...optionalParams: any[]): void {
     this.writeLog('log', message, optionalParams);
   }
 
-  verbose(message: any, ...optionalParams: any[]): any {
+  public verbose(message: any, ...optionalParams: any[]): void {
     this.writeLog('verbose', message, optionalParams);
   }
 
-  debug(message: any, ...optionalParams: any[]): any {
+  public debug(message: any, ...optionalParams: any[]): void {
     this.writeLog('debug', message, optionalParams);
   }
 
@@ -68,7 +68,7 @@ export class LoggerService implements LoggerInterface {
     this.writeToFile(level, logger);
   }
 
-  private async writeToFile(level: LogLevel, logger: string) {
+  private async writeToFile(level: LogLevel, logger: string): Promise<void> {
     const fileName = level === 'error' ? 'error_file.log' : 'log_file.log';
     const filePath = join('.', 'logs', fileName);
     const pathDist = dirname(filePath);
@@ -89,5 +89,9 @@ export class LoggerService implements LoggerInterface {
 
     mkdirSync(pathDist, { recursive: true });
     appendFileSync(filePath, logger);
+  }
+
+  public writeResponse(statusCode: number, responseBody: string): void {
+    this.log(`Response: Status code ${statusCode}; Body ${responseBody}`);
   }
 }

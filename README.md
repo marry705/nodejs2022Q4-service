@@ -4,7 +4,7 @@
 
 1. git clone this repository
 
-2. checkout on `dev2` branch
+2. checkout on `dev3` branch
 
 3. copy and rename `.env.example` file as `.env`.
 

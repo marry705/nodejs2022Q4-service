@@ -7,7 +7,8 @@ import { AppService } from './app.service';
 import { ArtistsModule } from './artists/artists.module';
 import { AuthModule } from './auth/auth.module';
 import { FavoritesModule } from './favorites/favorites.module';
-// import { LogsMiddleware } from './middleware/logger.middleware';
+import { LoggerModule } from './logger/logger.module';
+import { LogsMiddleware } from './middleware/logger.middleware';
 import { configOptions } from './orm.config';
 import { TracksModule } from './tracks/tracks.module';
 import { UsersModule } from './users/users.module';
@@ -21,6 +22,7 @@ import { UsersModule } from './users/users.module';
     AlbumsModule,
     FavoritesModule,
     AuthModule,
+    LoggerModule,
   ],
   controllers: [AppController],
   providers: [
@@ -35,9 +37,8 @@ import { UsersModule } from './users/users.module';
     },
   ],
 })
-export class AppModule {}
-// export class AppModule {
-//   configure(consumer: MiddlewareConsumer) {
-//     consumer.apply(LogsMiddleware).forRoutes('*');
-//   }
-// }
+export class AppModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(LogsMiddleware).forRoutes('*');
+  }
+}

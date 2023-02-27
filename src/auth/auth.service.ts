@@ -64,11 +64,9 @@ export class AuthService {
   }
 
   public async refresh(userTokenDto: TokenDto): Promise<JWTTokens> {
-    const user = await this.jwtService.verifyAsync<User>(
-      userTokenDto.refreshToken,
-    );
+    const user = await this.jwtService.verifyAsync(userTokenDto.refreshToken);
 
-    if (!user) {
+    if (!user || Date.now() >= user?.exp * 1000) {
       throw new HttpException('NOT_FOUND', HttpStatus.FORBIDDEN);
     }
 

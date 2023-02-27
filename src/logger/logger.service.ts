@@ -91,7 +91,7 @@ export class LoggerService implements LoggerInterface {
     appendFileSync(filePath, logger);
   }
 
-  public writeResponse(statusCode: number, responseBody: string): void {
-    this.log(`Response: Status code ${statusCode}; Body ${responseBody}`);
+  public writeResponse(statusCode: number, message: string): void {
+    this.log(`Response: Status code ${statusCode}; Body ${message}`);
   }
 }

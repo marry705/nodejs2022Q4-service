@@ -8,6 +8,7 @@ import { ArtistsModule } from './artists/artists.module';
 import { AuthModule } from './auth/auth.module';
 import { FavoritesModule } from './favorites/favorites.module';
 import { LoggerModule } from './logger/logger.module';
+import { LoggerService } from './logger/logger.service';
 import { LogsMiddleware } from './middleware/logger.middleware';
 import { configOptions } from './orm.config';
 import { TracksModule } from './tracks/tracks.module';
@@ -27,6 +28,7 @@ import { UsersModule } from './users/users.module';
   controllers: [AppController],
   providers: [
     AppService,
+    LoggerService,
     {
       provide: APP_PIPE,
       useValue: new ValidationPipe({

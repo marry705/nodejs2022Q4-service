@@ -6,16 +6,16 @@ import {
   HttpAdapterHost,
   HttpStatus,
 } from '@nestjs/common';
-import { LoggerService } from '../logger/logger.service';
+import { LoggerService } from './logger.service';
 
-@Catch(HttpException)
-export class HttpExceptionFilter implements ExceptionFilter {
+@Catch()
+export class LogExceptionsFilter implements ExceptionFilter {
   constructor(
     private readonly httpAdapterHost: HttpAdapterHost,
     private readonly logger: LoggerService,
   ) {}
 
-  catch(exception: Error, host: ArgumentsHost): void {
+  catch(exception: HttpException, host: ArgumentsHost): void {
     const ctx = host.switchToHttp();
     const { httpAdapter } = this.httpAdapterHost;
     const { name, message } = exception;

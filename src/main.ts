@@ -1,4 +1,4 @@
-import { NestFactory } from '@nestjs/core';
+import { HttpAdapterHost, NestFactory } from '@nestjs/core';
 import { env } from 'process';
 import { AppModule } from './app.module';
 import * as dotenv from 'dotenv';
@@ -7,6 +7,7 @@ import { OpenAPIObject, SwaggerModule } from '@nestjs/swagger';
 import { readFileSync } from 'fs';
 import { join } from 'path';
 import { LoggerService } from './logger/logger.service';
+import { LogExceptionsFilter } from './logger/log-exception.filter';
 
 dotenv.config();
 
@@ -17,7 +18,10 @@ async function bootstrap() {
     bufferLogs: true,
   });
 
-  app.useLogger(new LoggerService());
+  const logger = new LoggerService();
+
+  app.useLogger(logger);
+  app.useGlobalFilters(new LogExceptionsFilter(new HttpAdapterHost(), logger));
 
   const document = load(
     readFileSync(join(__dirname, '..', 'doc', 'doc.yaml'), 'utf8'),
